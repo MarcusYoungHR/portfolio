@@ -66,7 +66,7 @@ export default function Root() {
             <h1 className="text-center column-header">Marcus Young<br></br>Full Stack Software Engineer</h1>
             <div className='octagon mx-auto'></div>
           </div>
-          <div className='col-md-6 d-flex align-items-center content-column'>
+          <div className='col-md-6 d-flex align-items-center justify-content-center content-column'>
             <h1 className="text-center column-header">{capitalizeFirstLetter(location.slice(1))}</h1>
             {defaultComponent}
           </div>

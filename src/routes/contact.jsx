@@ -1,8 +1,7 @@
 export default function Contact() {
   return (
-    <div className="mx-auto h-100">
-      <h1 className="mt-4 text-center">Contact</h1>
-      <div className="bg-dark rounded p-3 mt-4 fs-3">
+    <div className="mx-auto">
+      <div className="bg-dark rounded p-3 fs-3">
         <p className="mb-5">
           <a href="tel:+19713810572" className="link-light">&#40;971&#41; 381-0572</a>
         </p>

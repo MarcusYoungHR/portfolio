@@ -8,10 +8,19 @@ export default function Root() {
   //use the useLocation hook to get the pathname of the current page
   let location = useLocation();
   location = location.pathname;
+  let defaultComponent;
   if (location === '/') {
-    location = <Bio />
+    defaultComponent = <Bio />
   } else {
-    location = <Outlet />
+    defaultComponent = <Outlet />
+  }
+
+  if (location === '/contact') {
+    <h1 className="text-center column-header">Contact</h1>
+  }
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
 
@@ -54,11 +63,12 @@ export default function Root() {
       <div className='container'>
         <div className='row'>
           <div className='col-md-6 align-items-center marcus-column'>
-            <h1 className="text-center marcus-header">Marcus Young<br></br>Full Stack Software Engineer</h1>
-            <div className='octagon mx-auto '></div>
+            <h1 className="text-center column-header">Marcus Young<br></br>Full Stack Software Engineer</h1>
+            <div className='octagon mx-auto'></div>
           </div>
           <div className='col-md-6 d-flex align-items-center content-column'>
-            {location}
+            <h1 className="text-center column-header">{capitalizeFirstLetter(location.slice(1))}</h1>
+            {defaultComponent}
           </div>
         </div>
       </div>

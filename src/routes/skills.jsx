@@ -15,7 +15,7 @@ export default function Skills() {
       </div>
       <div className="text-bg-dark rounded p-2 my-1">
         <h3>Dev Ops</h3>
-        <div>AWS, EC2, Nginx, Redis, Cloudfront, Route 53</div>
+        <div>AWS, EC2, S3, Nginx, Redis, Cloudfront, Route 53</div>
       </div>
       <div className="text-bg-dark rounded p-2 my-1">
         <h3>Misc</h3>

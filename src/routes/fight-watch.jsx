@@ -1,11 +1,116 @@
+import "../styles/fight-watch.css";
+import {
+  Link,
+  Form,
+  useLoaderData,
+  redirect,
+  useNavigation,
+} from "react-router-dom";
+import $ from "jquery";
+import { useEffect, useState, useRef } from "react";
+import { searchFighter, loadFighters } from "../http/fight-watch";
+import CardGrid from "../components/fight-watch/card-grid";
+import DropDownSort from "../components/fight-watch/drop-down-sort";
+import SpinnerOverlay from "../components/spinner-overlay";
+
+export async function action({ request }) {
+  const formData = await request.formData();
+  const updates = Object.fromEntries(formData);
+  const fighter = await searchFighter(updates.name);
+  return redirect(`/fight-watch`);
+}
+
+export async function loader() {
+  const fighters = await loadFighters();
+  return { fighters };
+}
+
 export default function FightWatch() {
+
+  const [loading, setLoading] = useState(false);
+
+  const navigation = useNavigation();
+
+  const { fighters } = useLoaderData();
+
+  useEffect(() => {
+    if (navigation.state !== "idle") {
+      setLoading(true);
+    } else {
+      setLoading(false);
+      const parentContainer = $('.fighter-container');
+      const targetContainer = $(`#fighter-${fighters.data[fighters.data.length - 1].id}`);
+
+      parentContainer.animate({
+        scrollTop: targetContainer.offset().top - parentContainer.offset().top + parentContainer.scrollTop()
+      }, 1000);
+    }
+  }, [navigation, fighters]);
+
+  useEffect(() => {
+    $("#root").removeClass();
+    $("#root").addClass("fight-watch-bg");
+    $("body").addClass("overflow-hidden");
+  }, []);
+
   return (
-    <div className='container'>
-      <div className='row'>
-        <div className='col-md-12'>
-          <h1>Fight Watch</h1>
+    <>
+      {loading && <SpinnerOverlay />}
+      <div className="min-vh-100">
+        <nav
+          className="navbar navbar-expand-lg text-bg-dark position-sticky top-0 fight-watch-nav"
+          data-bs-theme="dark"
+        >
+          <div className="container-fluid">
+            <div className="d-flex align-items-center">
+              <svg width="50" height="50">
+                <circle
+                  cx="25"
+                  cy="25"
+                  r="24"
+                  fill="rgb(136, 8, 8)"
+                  stroke="rgb(136, 8, 8)"
+                />
+                <text
+                  x="25"
+                  y="36.5"
+                  textAnchor="middle"
+                  fontSize="30"
+                  fill="white"
+                  fontWeight="600"
+                >
+                  FW
+                </text>
+              </svg>
+              <Link className="navbar-brand text-white nav-link mx-3" to={"/"}>
+                Home
+              </Link>
+            </div>
+            <div className="d-flex">
+              <DropDownSort />
+              <Form className="d-flex" method="post">
+                <input
+                  className="form-control mx-2"
+                  type="text"
+                  placeholder="Search"
+                  aria-label="Search"
+                  name="name"
+                ></input>
+                <button className="btn btn-outline-danger" type="submit">
+                  Search
+                </button>
+              </Form>
+            </div>
+          </div>
+        </nav>
+        <div className="container-fluid fighter-container">
+          {fighters ? (
+            <CardGrid fighters={fighters} />
+          ) : (
+            <h1 className="text-center text-white">Loading...</h1>
+          )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

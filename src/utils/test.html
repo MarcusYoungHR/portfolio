@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>My Dashboard</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="./styles.css">
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+  <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+  <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+
+  <script src="./main.js"></script>
+</head>
+
+<body>
+  <div class="grid">
+    <header class="header">
+      <i class="fas fa-bars header__menu"></i>
+      <div class="header__search">
+        <input class="header__input" placeholder="Search..." />
+      </div>
+      <div class="header__avatar">
+        <div class="dropdown">
+          <ul class="dropdown__list">
+            <li class="dropdown__list-item">
+              <span class="dropdown__icon"><i class="fas fa-user"></i></span>
+              <span class="dropdown__title">My Profile</span>
+            </li>
+            <li class="dropdown__list-item">
+              <span class="dropdown__icon"><i class="fas fa-clipboard-list"></i></span>
+              <span class="dropdown__title">My Account</span>
+            </li>
+            <li class="dropdown__list-item">
+              <span class="dropdown__icon"><i class="fas fa-sign-out-alt"></i></span>
+              <span class="dropdown__title">Log Out</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <aside class="sidenav">
+      <div class="sidenav__brand">
+        <i class="fas fa-feather-alt sidenav__brand-icon"></i>
+        <a class="sidenav__brand-link" href="#">App<span class="text-light">Corp</span></a>
+        <i class="fas fa-times sidenav__brand-close"></i>
+      </div>
+      <div class="sidenav__profile">
+        <div class="sidenav__profile-avatar"></div>
+        <div class="sidenav__profile-title text-light">Ada L</div>
+      </div>
+      <div class="row row--align-v-center row--align-h-center">
+        <ul class="navList">
+          <li class="navList__heading">follow-ups<i class="fas fa-calendar-alt"></i></li>
+          <li>
+            <div class="navList__subheading row row--align-v-center">
+              <span class="navList__subheading-icon"><i class="fas fa-wine-glass-alt"></i></span>
+              <span class="navList__subheading-title">Social Media</span>
+            </div>
+            <ul class="subList subList--hidden">
+              <li class="subList__item">Positive Mentions</li>
+              <li class="subList__item">Negative Mentions</li>
+              <li class="subList__item">DMs</li>
+            </ul>
+          </li>
+          <li>
+            <div class="navList__subheading row row--align-v-center">
+              <span class="navList__subheading-icon"><i class="fas fa-school"></i></span>
+              <span class="navList__subheading-title">Meetings</span>
+            </div>
+            <ul class="subList subList--hidden">
+              <li class="subList__item">Customers</li>
+              <li class="subList__item">Internal</li>
+            </ul>
+          </li>
+
+          <li class="navList__heading">messages<i class="fas fa-envelope"></i></li>
+          <li>
+            <div class="navList__subheading row row--align-v-center">
+              <span class="navList__subheading-icon"><i class="fas fa-envelope"></i></span>
+              <span class="navList__subheading-title">inbox</span>
+            </div>
+            <ul class="subList subList--hidden">
+              <li class="subList__item">primary</li>
+              <li class="subList__item">social</li>
+              <li class="subList__item">promotional</li>
+            </ul>
+          </li>
+          <li>
+            <div class="navList__subheading row row--align-v-center">
+              <span class="navList__subheading-icon"><i class="fas fa-eye"></i></span>
+              <span class="navList__subheading-title">unread</span>
+            </div>
+            <ul class="subList subList--hidden">
+              <li class="subList__item">primary</li>
+              <li class="subList__item">social</li>
+              <li class="subList__item">promotional</li>
+            </ul>
+          </li>
+          <li>
+            <div class="navList__subheading row row--align-v-center">
+              <span class="navList__subheading-icon"><i class="fas fa-book-open"></i></span>
+              <span class="navList__subheading-title">archives</span>
+            </div>
+            <ul class="subList subList--hidden">
+              <li class="subList__item">primary</li>
+              <li class="subList__item">social</li>
+              <li class="subList__item">promotional</li>
+            </ul>
+          </li>
+
+          <li class="navList__heading">statistics<i class="fas fa-chart-bar"></i></li>
+          <li>
+            <div class="navList__subheading row row--align-v-center">
+              <span class="navList__subheading-icon"><i class="fas fa-credit-card"></i></span>
+              <span class="navList__subheading-title">Engagement</span>
+            </div>
+            <ul class="subList subList--hidden">
+              <li class="subList__item">Social Media</li>
+              <li class="subList__item">Website</li>
+              <li class="subList__item">Other</li>
+            </ul>
+          </li>
+          <li>
+            <div class="navList__subheading row row--align-v-center">
+              <span class="navList__subheading-icon"><i class="fas fa-phone"></i></span>
+              <span class="navList__subheading-title">call stats</span>
+            </div>
+            <ul class="subList subList--hidden">
+              <li class="subList__item">last month</li>
+              <li class="subList__item">bi-weekly</li>
+              <li class="subList__item">yesterday</li>
+              <li class="subList__item">today</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="main__overview">
+        <div class="overviewCard">
+          <div class="overviewCard-icon overviewCard-icon--followUp">
+            <i class="fa fa-tasks"></i>
+          </div>
+          <div class="overviewCard-description">
+            <h3 class="overviewCard-title text-light">New <strong>Follow-up</strong></h3>
+            <p class="overviewCard-subtitle">Startup, Inc.</p>
+          </div>
+        </div>
+        <div class="overviewCard">
+          <div class="overviewCard-icon overviewCard-icon--meeting">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="overviewCard-description">
+            <h3 class="overviewCard-title text-light">Upcoming <strong>Meeting</strong></h3>
+            <p class="overviewCard-subtitle">[Internal] Content Review</p>
+          </div>
+        </div>
+        <div class="overviewCard">
+          <div class="overviewCard-icon overviewCard-icon--engagement">
+            <i class="fas fa-comments"></i>
+          </div>
+          <div class="overviewCard-description">
+            <h3 class="overviewCard-title text-light">Recent <strong>Engagements</strong></h3>
+            <p class="overviewCard-subtitle">472 since 12am</p>
+          </div>
+        </div>
+        <div class="overviewCard">
+          <div class="overviewCard-icon overviewCard-icon--message">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="overviewCard-description">
+            <h3 class="overviewCard-title text-light">New <strong>Message</strong></h3>
+            <p class="overviewCard-subtitle">Sarah - Process question</p>
+          </div>
+        </div>
+      </div>
+      <div class="main__cards">
+        <div class="card">
+          <div class="card__header">
+            <div class="card__header-title text-light">Social Media Accounts
+            </div>
+          </div>
+          <div class="card__main">
+            <div class="social-media-container">
+              <div class="social-media">
+                <i class="fa-brands fa-twitter fa-2x"></i>
+                <div class="document__title">Twitter</div>
+              </div>
+              <div class="social-media">
+                <i class="fa-brands fa-facebook fa-2x"></i>
+                <div class="document__title">Facebook</div>
+              </div>
+              <div class="social-media">
+                <i class="fa-brands fa-instagram fa-2x"></i>
+                <div class="document__title">Instagram</div>
+              </div>
+              <div class="social-media">
+                <i class="fa-brands fa-snapchat fa-2x"></i>
+                <div class="document__title">SnapChat</div>
+              </div>
+            </div>
+            <div>
+              <h3>Add a new account</h3>
+              <form>
+                <div style="display: flex; flex-direction: row;">
+                  <div style="flex: 1;">
+                    <label for="socialMediaAccount__network">
+                      Network
+                    </label>
+                    <select id="socialMediaAccount__network" required class="select">
+                      <option value="">Choose a network</option>
+                      <option value="facebook">Facebook</option>
+                      <option value="twitter">Twitter</option>
+                      <option value="instagram">Instagram</option>
+                      <option value="snapchat">Snapchat</option>
+                      <option value="tiktok">TikTok</option>
+                      <option value="whatsapp">WhatsApp</option>
+                      <option value="wechat">WeChat</option>
+                    </select>
+                  </div>
+              
+                  <div style="flex: 1;" class="input">
+                    <label for="socialMediaAccount__accountName">
+                      Account Name
+                    </label>
+                    <input type="text" id="socialMediaAccount__accountName" class="input" required>
+                  </div>
+              
+                  <div style="flex: 1;">
+                    <label for="socialMediaAccount__password">
+                      Account Password
+                    </label>
+                    <input type="password" id="socialMediaAccount__password" class="input" required>
+                  </div>
+                </div>
+              
+                <div style="text-align: center; margin-top: 10px;">
+                  <button type="submit" class="account-submit">
+                    Add account
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card__header">
+            <div class="card__header-title text-light">My <strong>Todos</strong>
+              <a href="#" class="card__header-link text-bold">View All</a>
+            </div>
+            <div class="settings">
+              <div class="settings__block"><i class="fas fa-edit"></i></div>
+              <div class="settings__block"><i class="fas fa-cog"></i></div>
+            </div>
+          </div>
+          <div class="card__main card__timeline">
+            <div class="card__row">
+              <div class="card__icon"><i class="fas fa-calendar-check"></i></div>
+              <div class="card__time">
+                <div>8:30am</div>
+              </div>
+              <div class="card__detail">
+                <div class="card__source text-bold">[Internal] Content review</div>
+                <div class="card__description">Discuss the marketing plan</div>
+                <div class="card__note">The RAM Room</div>
+              </div>
+            </div>
+            <div class="card__row">
+              <div class="card__icon"><i class="fas fa-comments"></i></div>
+              <div class="card__time">
+                <div>10:30am</div>
+              </div>
+              <div class="card__detail">
+                <div class="card__source text-bold">Reply to top engagements</div>
+                <div class="card__description">Retweet / republish / favorite</div>
+              </div>
+            </div>
+            <div class="card__row">
+              <div class="card__icon"><i class="fas fa-tasks"></i></div>
+              <div class="card__time">
+                <div>1pm</div>
+              </div>
+              <div class="card__detail">
+                <div class="card__source text-bold">Follow up with new customers</div>
+                <div class="card__description">Startup, Inc and BigCorp</div>
+                <div class="card__note">Remember to send a gift to Lisa at BigCorp</div>
+              </div>
+            </div>
+            <div class="card__row">
+              <div class="card__icon"><i class="fas fa-tasks"></i></div>
+              <div class="card__time">
+                <div>3pm</div>
+              </div>
+              <div class="card__detail">
+                <div class="card__source text-bold">Follow up on renewals</div>
+                <div class="card__description">CorpCo and Growth, Inc</div>
+                <div class="card__note">Ask about Feature X usage</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card__header">
+            <div class="card__header-title text-light">Recent <strong>Documents</strong>
+              <a href="#" class="card__header-link text-bold">View All</a>
+            </div>
+            <div class="settings">
+              <div class="settings__block"><i class="fas fa-edit"></i></div>
+              <div class="settings__block"><i class="fas fa-cog"></i></div>
+            </div>
+          </div>
+          <div class="card__main">
+            <div class="documents">
+              <div class="document">
+                <div class="document__img"></div>
+                <div class="document__title">q1-marketing-plan</div>
+                <div class="document__date">11/25/2022</div>
+              </div>
+              <div class="document">
+                <div class="document__img"></div>
+                <div class="document__title">annual-budget</div>
+                <div class="document__date">09/04/2022</div>
+              </div>
+              <div class="document">
+                <div class="document__img"></div>
+                <div class="document__title">2021-results</div>
+                <div class="document__date">10/10/2021</div>
+              </div>
+              <div class="document">
+                <div class="document__img"></div>
+                <div class="document__title">contract-corpco-final-v2</div>
+                <div class="document__date">11/01/2021</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card card--finance">
+          <div class="card__header">
+            <div class="card__header-title text-light">Monthly <strong>Spending</strong>
+              <a href="#" class="card__header-link text-bold">View All</a>
+            </div>
+            <div class="settings">
+              <div class="settings__block"><i class="fas fa-edit"></i></div>
+              <div class="settings__block"><i class="fas fa-cog"></i></div>
+            </div>
+          </div>
+          <div class="card__main">
+            <div id="chartdiv"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p><span class="footer__copyright">&copy;</span> 2022 AppCorp</p>
+    </footer>
+  </div>
+</body>
+
+</html>

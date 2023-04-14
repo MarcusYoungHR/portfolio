@@ -9,12 +9,20 @@
 }
 
 
-#root {
+.portfolio-bg {
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
   background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
+  animation: gradient 10s ease infinite;
   height: 100vh;
+  overflow-y: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
+
+#root::-webkit-scrollbar {
+  display: none;
+}
+
 
 @keyframes gradient {
   0% {
@@ -34,18 +42,48 @@
   opacity: 0.5;
 }
 
+.clickable-elem:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
 .inline-block {
   display: inline-block;
 }
 
-.marcus-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.grid-column {
+  display: grid;
+  grid-template-rows: 0px 100%
 }
 
-.column-header {
-  position: absolute;
-  top: 70px;
+.h-max-content {
+  height: max-content;
+}
+
+.card {
+  width: 15rem;
+}
+
+
+.card-body {
+  position: relative
+}
+
+.card-link {
+  text-decoration: none;
+}
+
+.bg-navy {
+  background-color: rgb(0, 0, 102);
+}
+
+.project-image {
+  max-height: 150px;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: right top;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }

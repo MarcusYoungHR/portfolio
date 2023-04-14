@@ -1,18 +1,4 @@
-.resume {
-  position: relative;
-  height: 100%;
-  width: 100%;
-}
-
-.resume-thumbnail {
-  max-height: 80%;
-}
-
 .resume-thumbnail:hover {
   opacity: 0.5;
   cursor: pointer;
-}
-
-.enlarge-text {
-  font-size: 10px;
 }

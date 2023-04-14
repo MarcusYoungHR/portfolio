@@ -1,38 +1,24 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
+import Projects from "../components/projects";
 import $ from 'jquery';
 import { useEffect } from "react";
-import Bio from "./bio";
 
 export default function Root() {
 
-  //use the useLocation hook to get the pathname of the current page
+  useEffect(() => {
+    $("#root").removeClass()
+    $("#root").addClass('portfolio-bg')
+  }, [])
+
   let location = useLocation();
   location = location.pathname;
-  let defaultComponent;
-  if (location === '/') {
-    defaultComponent = <Bio />
-  } else {
-    defaultComponent = <Outlet />
-  }
-
-  if (location === '/contact') {
-    <h1 className="text-center column-header">Contact</h1>
-  }
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-
-  //call jQuery from within a useEffect hook to get the height of the nav element after the component mounts
-  useEffect(() => {
-    const navHeight = $('nav').height();
-    //add a style to the element with class content-column to set the height of the column to the height of the window minus the height of the nav element
-    $('.content-column').css('height', window.innerHeight - navHeight - 20);
-  }, []);
-
   return (
-    <div>
+    <div className="min-vh-100 d-flex flex-column">
       <nav className="navbar navbar-expand-lg text-bg-dark">
         <div className="container-fluid">
           <svg width="50" height="50">
@@ -44,6 +30,9 @@ export default function Root() {
           </button>
           <div className="collapse navbar-collapse float-right" id="navbarNav">
             <ul className="navbar-nav ms-auto">
+              <li className="nav-item">
+                <Link className="nav-link text-white" to={"/"}>Projects</Link>
+              </li>
               <li className="nav-item">
                 <Link className="nav-link text-white" to={"bio"}>Bio</Link>
               </li>
@@ -60,16 +49,26 @@ export default function Root() {
           </div>
         </div>
       </nav>
-      <div className='container'>
-        <div className='row'>
-          <div className='col-md-6 align-items-center marcus-column'>
-            <h1 className="text-center column-header">Marcus Young<br></br>Full Stack Software Engineer</h1>
-            <div className='octagon mx-auto'></div>
+      <div className='container d-flex flex-column flex-grow-1'>
+        <div className='row flex-grow-1'>
+          <div className='col-md-6 grid-column justify-content-center'>
+            <h1 className="text-center">Marcus Young<br></br>Full Stack Software Engineer</h1>
+            <div className='octagon mx-auto align-self-center'></div>
           </div>
-          <div className='col-md-6 d-flex align-items-center justify-content-center content-column'>
-            <h1 className="text-center column-header">{capitalizeFirstLetter(location.slice(1))}</h1>
-            {defaultComponent}
-          </div>
+          {location === '/' ?
+            <div className='col-md-6 grid-column justify-content-center'>
+              <h1 className="text-center">Projects</h1>
+              <div className="h-max-content align-self-center py-5">
+                <Projects />
+              </div>
+            </div> :
+            <div className='col-md-6 grid-column justify-content-center'>
+              <h1 className="text-center">{capitalizeFirstLetter(location.slice(1))}</h1>
+              <div className="h-max-content align-self-center py-5">
+                <Outlet />
+              </div>
+            </div>
+          }
         </div>
       </div>
     </div>

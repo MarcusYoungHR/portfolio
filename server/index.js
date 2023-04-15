@@ -1,7 +1,8 @@
 const express = require('express')
-const searchFighter = require('./sherdog-scraper')
+const searchFighter = require('./utils/sherdog-scraper')
 const bodyParser = require('body-parser')
 const { insertFighter, loadFighters, removeFighter } = require('./database/fight-watch')
+const updateFightDatesInterval = require('./utils/update-fighters')
 
 const app = express()
 app.use(bodyParser.json())
@@ -15,10 +16,11 @@ app.post('/search', (req, res) => {
   const { name } = req.body
   searchFighter(name).then((fighter) => {
     return insertFighter(fighter)
-  }).then(() => {
-    res.send('success')
+  }).then((data) => {
+    console.log(data)
+    res.status(200).send(`${data}`)
   }).catch((err) => {
-    console.log(err)
+    // console.log(err)
     res.status(500).send(err)
   })
 })
@@ -46,3 +48,5 @@ app.delete('/remove-fighter/:id', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+updateFightDatesInterval()

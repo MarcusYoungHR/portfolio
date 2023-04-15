@@ -13,7 +13,6 @@ const searchFighter = function (name) {
     return axios.get(fighterLink).then((res) => {
       const $ = cheerio.load(res.data)
       const dateHTML = $('[itemprop=startDate]').attr('content')
-      // dateHTML = dateHTML.slice(0, dateHTML.indexOf('T')).toLocaleString('default', {month: 'long'})
 
       const fighter = {
         name: $('.fn').text(),
@@ -26,7 +25,8 @@ const searchFighter = function (name) {
       return fighter
     })
   }).catch((err) => {
-    console.log(err)
+    console.log('--------------------- scraping error --------------------\n', err)
+    throw err
   })
 }
 

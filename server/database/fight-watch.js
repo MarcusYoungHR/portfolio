@@ -3,6 +3,7 @@ const { Sequelize } = require("sequelize");
 const sequelize = new Sequelize("fight_watch", "root", "Elliot1!", {
   host: "ec2-18-217-156-71.us-east-2.compute.amazonaws.com",
   dialect: "mysql",
+  logging: false,
 });
 
 async function connectToDatabase() {
@@ -50,26 +51,24 @@ sequelize.sync();
 
 const insertFighter = async (fighter) => {
   try {
-    const createdFighter = await Fighters.create(fighter);
-    return createdFighter;
-  } catch (error) {
-    if (error instanceof Error) {
-      const sequelizeError = error.original;
-      if (sequelizeError instanceof Error) {
-        const { name, message, errno, ...rest } = sequelizeError;
-        const newError = {
-          name,
-          message,
-          errno,
-          error: rest,
-        };
-        throw newError;
-      } else {
-        throw sequelizeError;
-      }
-    } else {
-      throw error;
+    const [foundOrCreatedFighter, created] = await Fighters.findOrCreate({
+      where: { name: fighter.name },
+      defaults: fighter,
+    });
+
+    if (!created) {
+      console.log("Record already exists:", foundOrCreatedFighter.id);
     }
+    return foundOrCreatedFighter.id;
+  } catch (error) {
+    const { original } = error;
+    if (original instanceof Error) {
+      const { name, message, errno, ...rest } = original;
+      const newError = { name, message, errno, error: rest };
+      console.log(newError);
+      throw newError;
+    }
+    throw error;
   }
 };
 
@@ -85,8 +84,13 @@ const removeFighter = (id) => {
   });
 };
 
+const updateFighter = async (fighter) => {
+  return Fighters.upsert(fighter)
+}
+
 module.exports = {
   insertFighter,
   loadFighters,
   removeFighter,
+  updateFighter
 };

@@ -16,7 +16,33 @@ import SpinnerOverlay from "../components/spinner-overlay";
 export async function action({ request }) {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
-  const fighter = await searchFighter(updates.name);
+  const fighterId = await searchFighter(updates.name);
+  console.log(fighterId);
+
+  if (fighterId) {
+    const parentContainer = $(".fighter-container");
+    const targetContainer = $(`#fighter-${fighterId.data}`);
+    const imgAndDivs = targetContainer.find("img, div");
+    function animateScroll(callback) {
+      parentContainer.animate(
+        {
+          scrollTop:
+            targetContainer.offset().top -
+            parentContainer.offset().top +
+            parentContainer.scrollTop(),
+        },
+        500,
+        callback
+      );
+    }
+    function animateFlash() {
+      imgAndDivs.animate({ opacity: 0 }, 100, function () {
+        imgAndDivs.animate({ opacity: 1 }, 2000);
+      });
+    }
+    animateScroll(animateFlash);
+  }
+
   return redirect(`/fight-watch`);
 }
 
@@ -26,7 +52,6 @@ export async function loader() {
 }
 
 export default function FightWatch() {
-
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();
@@ -38,14 +63,8 @@ export default function FightWatch() {
       setLoading(true);
     } else {
       setLoading(false);
-      const parentContainer = $('.fighter-container');
-      const targetContainer = $(`#fighter-${fighters.data[fighters.data.length - 1].id}`);
-
-      parentContainer.animate({
-        scrollTop: targetContainer.offset().top - parentContainer.offset().top + parentContainer.scrollTop()
-      }, 1000);
     }
-  }, [navigation, fighters]);
+  }, [navigation]);
 
   useEffect(() => {
     $("#root").removeClass();

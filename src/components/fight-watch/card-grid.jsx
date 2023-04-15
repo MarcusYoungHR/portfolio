@@ -9,7 +9,9 @@ export default function CardGrid({ fighters }) {
     .sort((a, b) => {
       const firstLetterA = a.name[0].toUpperCase();
       const firstLetterB = b.name[0].toUpperCase();
-      if (sorting.name === "asc") {
+      if (sorting.name === null) {
+        return 0;
+      } else if (sorting.name === "asc") {
         return firstLetterA < firstLetterB
           ? -1
           : firstLetterA > firstLetterB
@@ -24,7 +26,9 @@ export default function CardGrid({ fighters }) {
       }
     })
     .sort((a, b) => {
-      if (sorting.fight_date === "asc") {
+      if (sorting.fight_date === null) {
+        return 0;
+      } else if (sorting.fight_date === "asc") {
         return a.fight_date === "TBD"
           ? 1
           : b.fight_date === "TBD"
@@ -48,7 +52,7 @@ export default function CardGrid({ fighters }) {
     });
 
   return (
-    <div className="row row-cols-1 row-cols-md-3 row-cols-lg-5 row-cols-xxl-6 g-4 py-3 ">
+    <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 row-cols-xxl-6 g-4 py-3 ">
       {sortedFighters.map((fighter) => {
         return (
           <FighterCard

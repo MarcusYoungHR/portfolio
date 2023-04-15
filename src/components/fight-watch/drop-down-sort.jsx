@@ -1,9 +1,10 @@
-import {useContext} from 'react';
-import {FightWatchContext} from '../../store/context/fight-watch-context';
+import { useContext } from "react";
+import { FightWatchContext } from "../../store/context/fight-watch-context";
+import SortingCheckBox from "./sorting-check-box";
+import $ from "jquery";
 
 export default function DropDownSort() {
   const { sorting, changeSorting } = useContext(FightWatchContext);
-
 
   const isActive = (key, value) => {
     if (sorting[key] === value) {
@@ -18,7 +19,7 @@ export default function DropDownSort() {
   };
 
   return (
-    <div className="dropdown">
+    <div className="dropdown fight-watch-dropdown">
       <button
         className="btn btn-danger dropdown-toggle fight-watch-button clickable-elem"
         type="button"
@@ -27,9 +28,15 @@ export default function DropDownSort() {
       >
         Sort
       </button>
-      <ul className="dropdown-menu dropdown-menu-dark">
+      <ul
+        className="dropdown-menu dropdown-menu-dark"
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+      >
         <li>
-          <div className="dropdown-item">
+          <div className="dropdown-item fight-watch-dropdown-item">
+            <SortingCheckBox sortingKey="fight_date" />
             Fight Date{" "}
             <i
               className={`bi bi-chevron-down clickable-elem ${isActive(
@@ -52,7 +59,8 @@ export default function DropDownSort() {
           </div>
         </li>
         <li>
-          <div className="dropdown-item">
+          <div className="dropdown-item fight-watch-dropdown-item">
+            <SortingCheckBox sortingKey="name" />
             Name{" "}
             <i
               className={`bi bi-chevron-down clickable-elem ${isActive(

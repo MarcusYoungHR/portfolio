@@ -7,42 +7,59 @@ import {
   useNavigation,
 } from "react-router-dom";
 import $ from "jquery";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { searchFighter, loadFighters } from "../http/fight-watch";
 import CardGrid from "../components/fight-watch/card-grid";
 import DropDownSort from "../components/fight-watch/drop-down-sort";
 import SpinnerOverlay from "../components/spinner-overlay";
 
+function animateScroll(parent, child, callback) {
+  parent.animate(
+    {
+      scrollTop: child.offset().top - parent.offset().top + parent.scrollTop(),
+    },
+    500,
+    callback
+  );
+}
+
+function animateFlash(target) {
+  target.animate({ opacity: 0 }, 100, function () {
+    target.animate({ opacity: 1 }, 2000);
+  });
+}
+
+function animationController(fighterId) {
+  const parentContainer = $(".fighter-container");
+  const targetContainer = $(`#fighter-${fighterId.data}`);
+  const imgAndDivs = targetContainer.find("img, div");
+
+  if (parentContainer.offset() && targetContainer.offset()) {
+    animateScroll(parentContainer, targetContainer, () => {
+      animateFlash(imgAndDivs);
+    });
+  } else {
+    console.error(
+      "Offsets not found:",
+      parentContainer.offset(),
+      targetContainer.offset()
+    );
+  }
+}
+
 export async function action({ request }) {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
   const fighterId = await searchFighter(updates.name);
-  console.log(fighterId);
 
+  // $(window).on("load", () => {
+  //   animationController(fighterId);
+  // });
   if (fighterId) {
-    const parentContainer = $(".fighter-container");
-    const targetContainer = $(`#fighter-${fighterId.data}`);
-    const imgAndDivs = targetContainer.find("img, div");
-    function animateScroll(callback) {
-      parentContainer.animate(
-        {
-          scrollTop:
-            targetContainer.offset().top -
-            parentContainer.offset().top +
-            parentContainer.scrollTop(),
-        },
-        500,
-        callback
-      );
-    }
-    function animateFlash() {
-      imgAndDivs.animate({ opacity: 0 }, 100, function () {
-        imgAndDivs.animate({ opacity: 1 }, 2000);
-      });
-    }
-    animateScroll(animateFlash);
+    $(() => {animationController(fighterId)})
   }
 
+  // return redirect(`/fight-watch#${fighterId.data}`);
   return redirect(`/fight-watch`);
 }
 

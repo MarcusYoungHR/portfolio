@@ -1,7 +1,8 @@
 import { Form } from "react-router-dom";
+import { useContext } from "react";
+import { FightWatchContext } from "../../store/context/fight-watch-context";
 
-export default function FighterCard(props) {
-  const { name, image, fight_date, next_opponent, id } = props;
+export default function FighterCard({ name, image, fight_date, next_opponent, id }) {
 
   let outputDate = fight_date;
   if (outputDate !== "TBD") {

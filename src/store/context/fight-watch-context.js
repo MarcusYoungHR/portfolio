@@ -5,6 +5,8 @@ export const FightWatchContext = createContext({
   changeSorting: () => {},
   loading: true,
   flipLoading: () => {},
+  lastFighter: null,
+  changeLastFighter: () => {},
 });
 
 function FightWatchContextProvider({ children }) {
@@ -12,6 +14,12 @@ function FightWatchContextProvider({ children }) {
     name: null,
     fight_date: null
   });
+
+  const [lastFighter, setLastFighter] = useState(null);
+
+  function changeLastFighter(fighter) {
+    setLastFighter(fighter);
+  }
 
   const [loading, setLoading] = useState(true);
 
@@ -31,7 +39,9 @@ function FightWatchContextProvider({ children }) {
     sorting,
     changeSorting,
     loading,
-    flipLoading
+    flipLoading,
+    lastFighter,
+    changeLastFighter,
   }
 
   return  (

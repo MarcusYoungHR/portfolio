@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { FightWatchContext } from "../../store/context/fight-watch-context";
 import SortingCheckBox from "./sorting-check-box";
-import $ from "jquery";
 
 export default function DropDownSort() {
   const { sorting, changeSorting } = useContext(FightWatchContext);

@@ -51,15 +51,11 @@ export async function action({ request }) {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
   const fighterId = await searchFighter(updates.name);
-
-  // $(window).on("load", () => {
-  //   animationController(fighterId);
-  // });
+  
   if (fighterId) {
     $(() => {animationController(fighterId)})
   }
 
-  // return redirect(`/fight-watch#${fighterId.data}`);
   return redirect(`/fight-watch`);
 }
 

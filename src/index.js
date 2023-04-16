@@ -63,7 +63,7 @@ const router = createBrowserRouter([
   {
     path: "/cover-letter",
     element: <CoverLetter />,
-  },
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

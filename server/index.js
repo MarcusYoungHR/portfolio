@@ -17,6 +17,10 @@ app.use(express.static(path.join(__dirname, "../build")));
 
 // console.log(path.join(__dirname, '../build'))
 
+app.get('/graph', (req, res) => {
+  res.sendFile(path.join(__dirname, "../ember/index.html"));
+});
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
@@ -64,6 +68,8 @@ app.delete("/remove-fighter/:id", (req, res) => {
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, "../build/index.html"));
 });
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

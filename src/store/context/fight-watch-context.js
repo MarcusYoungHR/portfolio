@@ -12,7 +12,7 @@ export const FightWatchContext = createContext({
 function FightWatchContextProvider({ children }) {
   const [sorting, setSorting] = useState({
     name: null,
-    fight_date: null
+    fight_date: 'asc'
   });
 
   const [lastFighter, setLastFighter] = useState(null);

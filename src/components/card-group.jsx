@@ -5,11 +5,7 @@ export default function CardGroup(arr) {
     <div className="card-group">
       {arr.data.map((project, i) => {
         return (
-          <ProjectCard
-            title={project.title}
-            body={project.description}
-            picture={project.image}
-            link={project.link}
+          <ProjectCard project= {project}
             key = {`card-${i}`}
           />
         )

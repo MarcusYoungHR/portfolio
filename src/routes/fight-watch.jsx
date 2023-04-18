@@ -41,7 +41,9 @@ function animationController(fighterId) {
   } else {
     console.error(
       "Offsets not found:",
+      'parentContainer: ',
       parentContainer.offset(),
+      'targetContainer: ',
       targetContainer.offset()
     );
   }
@@ -51,9 +53,12 @@ export async function action({ request }) {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
   const fighterId = await searchFighter(updates.name);
-  
+
   if (fighterId) {
-    $(() => {animationController(fighterId)})
+    console.log('action')
+    $(() => {
+      animationController(fighterId);
+    });
   }
 
   return redirect(`/fight-watch`);
@@ -61,6 +66,8 @@ export async function action({ request }) {
 
 export async function loader() {
   const fighters = await loadFighters();
+  console.log('loader')
+  
   return { fighters };
 }
 
@@ -78,6 +85,7 @@ export default function FightWatch() {
       setLoading(false);
     }
   }, [navigation]);
+
 
   useEffect(() => {
     $("#root").removeClass();

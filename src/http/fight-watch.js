@@ -19,6 +19,7 @@ export async function searchFighter(name) {
 
 export async function loadFighters() {
   return axios.get("/load-fighters").then((fighters) => {
+    console.log(fighters)
     return fighters;
   });
 }

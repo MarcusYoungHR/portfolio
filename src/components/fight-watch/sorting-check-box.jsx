@@ -5,10 +5,7 @@ export default function SortingCheckBox({ sortingKey }) {
   const { sorting, changeSorting } = useContext(FightWatchContext);
   const handleChange = (e) => {
     if (e.target.checked) {
-      // changeSorting({ name: "someValue" }); // Replace 'someValue' with the desired value when checked
-      console.log('checked')
     } else {
-      console.log('unchecked')
       changeSorting(sortingKey, null);
     }
   };

@@ -3,32 +3,22 @@ import { createContext, useState } from "react";
 export const FightWatchContext = createContext({
   sorting: {},
   changeSorting: () => {},
-  loading: true,
-  flipLoading: () => {},
-  lastFighter: null,
-  changeLastFighter: () => {},
+  initialLoad: true,
+  updateInitialLoad: () => {},
 });
 
 function FightWatchContextProvider({ children }) {
   const [sorting, setSorting] = useState({
     name: null,
-    fight_date: 'asc'
+    fight_date: "asc",
   });
 
-  const [lastFighter, setLastFighter] = useState(null);
+  const [initialLoad, setInitialLoad] = useState(true);
 
-  function changeLastFighter(fighter) {
-    setLastFighter(fighter);
+  function updateInitialLoad(bool) {
+    setInitialLoad(bool);
   }
 
-  const [loading, setLoading] = useState(true);
-
-  function flipLoading() {
-    setLoading((prevLoading) => {
-      return !prevLoading;
-    });
-  }
-  
   function changeSorting(key, value) {
     setSorting((prevSorting) => {
       return { ...prevSorting, [key]: value };
@@ -38,18 +28,15 @@ function FightWatchContextProvider({ children }) {
   const value = {
     sorting,
     changeSorting,
-    loading,
-    flipLoading,
-    lastFighter,
-    changeLastFighter,
-  }
+    initialLoad,
+    updateInitialLoad
+  };
 
-  return  (
+  return (
     <FightWatchContext.Provider value={value}>
       {children}
     </FightWatchContext.Provider>
-  )
-
+  );
 }
 
 export default FightWatchContextProvider;

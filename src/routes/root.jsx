@@ -1,12 +1,33 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
 import Projects from "../components/projects";
 import $ from "jquery";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Root() {
+  const [contentHeight, setContentHeight] = useState(0);
+
+  const navbarRef = useRef(null);
+
+  function updateContentHeight() {
+    const navbarHeight = $(navbarRef.current).outerHeight();
+    const windowHeight = $(window).height();
+    const contentMaxHeight = windowHeight - navbarHeight;
+
+    setContentHeight(contentMaxHeight);
+  }
+
   useEffect(() => {
     $("#root").removeClass();
     $("#root").addClass("portfolio-bg");
+
+    if (navbarRef.current) {
+      updateContentHeight();
+    }
+    window.addEventListener("resize", updateContentHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateContentHeight);
+    };
   }, []);
 
   let location = useLocation();
@@ -18,7 +39,7 @@ export default function Root() {
 
   return (
     <div className="min-vh-100 d-flex flex-column">
-      <nav className="navbar navbar-expand-lg text-bg-dark">
+      <nav className="navbar navbar-expand-lg text-bg-dark" ref={navbarRef}>
         <div className="container-fluid">
           <svg width="50" height="50">
             <polygon
@@ -80,7 +101,7 @@ export default function Root() {
           </div>
         </div>
       </nav>
-      <div className="container d-flex flex-column flex-grow-1">
+      <div className="container d-flex flex-column flex-grow-1" style={{maxHeight: contentHeight}}>
         <div className="row flex-grow-1">
           <div className="col-md-6 grid-column justify-content-center">
             <h1 className="text-center">
@@ -100,7 +121,7 @@ export default function Root() {
               <h1 className="text-center">
                 {capitalizeFirstLetter(location.slice(1))}
               </h1>
-              <div className="h-max-content align-self-center py-5">
+              <div className="h-max-content align-self-center pt-5">
                 <Outlet />
               </div>
             </div>

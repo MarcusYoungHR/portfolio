@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { FightWatchContext } from "../../store/context/fight-watch-context";
 
 export default function CardGrid({ fighters }) {
-  const { sorting, lastFighter, changeLastFighter } = useContext(FightWatchContext);
+  const { sorting } = useContext(FightWatchContext);
 
   const sortedFighters = [...fighters.data]
     .sort((a, b) => {

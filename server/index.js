@@ -6,7 +6,7 @@ const {
   loadFighters,
   removeFighter,
 } = require("./database/fight-watch");
-const updateFightDatesInterval = require("./utils/update-fighters");
+const {updateFightDatesInterval, updateFightDates} = require("./utils/update-fighters");
 const path = require("path");
 
 const app = express();
@@ -44,7 +44,7 @@ app.post("/search", (req, res) => {
 app.get("/load-fighters", (req, res) => {
   loadFighters()
     .then((fighters) => {
-      console.log(fighters);
+      // console.log(fighters);
       res.send(fighters);
     })
     .catch((err) => {
@@ -65,6 +65,11 @@ app.delete("/remove-fighter/:id", (req, res) => {
     });
 });
 
+app.get('/manual-update', (req, res) => {
+  updateFightDates()
+})
+
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, "../build/index.html"));
 });
@@ -76,3 +81,5 @@ app.listen(port, () => {
 });
 
 updateFightDatesInterval();
+
+

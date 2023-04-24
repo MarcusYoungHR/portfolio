@@ -25,4 +25,7 @@ const updateFightDatesInterval = () => {
   setInterval(updateFightDates, fullDayInMS)
 }
 
-module.exports = updateFightDatesInterval
+module.exports = {
+  updateFightDatesInterval,
+  updateFightDates
+}

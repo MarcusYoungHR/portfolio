@@ -49,7 +49,7 @@ const Fighters = sequelize.define("Fighters", fighters);
 // sequelize.sync({force: true}) //drops tables and recreates them
 sequelize.sync();
 
-const insertFighter = async (fighter) => {
+const inseratFighter = async (fighter) => {
   try {
     const [foundOrCreatedFighter, created] = await Fighters.findOrCreate({
       where: { name: fighter.name },
@@ -71,6 +71,17 @@ const insertFighter = async (fighter) => {
     throw error;
   }
 };
+
+const insertFighter = async (fighter) => {
+  try {
+    const [newFighter, created] = await Fighters.upsert(fighter)
+    console.log(`Fighter ${created ? 'created' : 'updated'}:`, newFighter.toJSON());
+    return newFighter.id
+  } catch (error){
+    console.log('error inserting fighter:\n', error)
+    throw error
+  } 
+}
 
 const loadFighters = () => {
   return Fighters.findAll();

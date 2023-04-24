@@ -19,13 +19,11 @@ export async function searchFighter(name) {
 
 export async function loadFighters() {
   return axios.get("/load-fighters").then((fighters) => {
-    console.log(fighters)
     return fighters;
   });
 }
 
 export async function removeFighter(id) {
-  // console.log(id)
   return axios.delete(`/remove-fighter/${id}`).then(() => {
     return;
   });

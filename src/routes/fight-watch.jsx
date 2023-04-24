@@ -12,6 +12,7 @@ import { searchFighter, loadFighters } from "../http/fight-watch";
 import CardGrid from "../components/fight-watch/card-grid";
 import DropDownSort from "../components/fight-watch/drop-down-sort";
 import SpinnerOverlay from "../components/spinner-overlay";
+import { FightWatchContext } from "../store/context/fight-watch-context";
 
 function animateScroll(parent, child, callback) {
   parent.animate(
@@ -31,7 +32,7 @@ function animateFlash(target) {
 
 function animationController(fighterId) {
   const parentContainer = $(".fighter-container");
-  const targetContainer = $(`#fighter-${fighterId.data}`);
+  const targetContainer = $(`#fighter-${fighterId}`);
   const imgAndDivs = targetContainer.find("img, div");
 
   if (parentContainer.offset() && targetContainer.offset()) {
@@ -41,9 +42,9 @@ function animationController(fighterId) {
   } else {
     console.error(
       "Offsets not found:",
-      'parentContainer: ',
+      "parentContainer: ",
       parentContainer.offset(),
-      'targetContainer: ',
+      "targetContainer: ",
       targetContainer.offset()
     );
   }
@@ -54,29 +55,30 @@ export async function action({ request }) {
   const updates = Object.fromEntries(formData);
   const fighterId = await searchFighter(updates.name);
 
-  if (fighterId) {
-    console.log('action')
-    $(() => {
-      animationController(fighterId);
-    });
-  }
-
   return redirect(`/fight-watch`);
 }
 
 export async function loader() {
   const fighters = await loadFighters();
-  console.log('loader')
-  
-  return { fighters };
+
+  return fighters;
 }
 
 export default function FightWatch() {
   const [loading, setLoading] = useState(false);
-
+  const [contentHeight, setContentHeight] = useState(0);
+  const { initialLoad, updateInitialLoad } = useContext(FightWatchContext);
   const navigation = useNavigation();
+  const fighters = useLoaderData();
+  const navbarRef = useRef();
 
-  const { fighters } = useLoaderData();
+  function updateContentHeight() {
+    const navbarHeight = $(navbarRef.current).outerHeight();
+    const windowHeight = $(window).height();
+    const contentMaxHeight = windowHeight - navbarHeight;
+
+    setContentHeight(contentMaxHeight);
+  }
 
   useEffect(() => {
     if (navigation.state !== "idle") {
@@ -86,18 +88,51 @@ export default function FightWatch() {
     }
   }, [navigation]);
 
+  useEffect(() => {
+    function findMostRecentFighter(a, b) {
+      const dateA = new Date(a.updatedAt);
+      const dateB = new Date(b.updatedAt);
+
+      return dateB - dateA;
+    }
+
+    if (!initialLoad) {
+      const mostRecentFighter = [...fighters.data].sort(
+        findMostRecentFighter
+      )[0];
+      $(() => {
+        animationController(mostRecentFighter.id);
+      });
+    }
+  }, [fighters]);
 
   useEffect(() => {
     $("#root").removeClass();
     $("#root").addClass("fight-watch-bg");
     $("body").addClass("overflow-hidden");
+    updateInitialLoad(true);
+    if (navbarRef.current) {
+      updateContentHeight();
+    }
+    window.addEventListener("resize", updateContentHeight);
+
+    return () => {
+      $("body").removeClass("overflow-hidden");
+      $("#root").removeClass("fight-watch-bg");
+      window.removeEventListener("resize", updateContentHeight);
+    };
   }, []);
+
+  function clickHandler() {
+    updateInitialLoad(false);
+  }
 
   return (
     <>
       {loading && <SpinnerOverlay />}
       <div className="min-vh-100">
         <nav
+          ref={navbarRef}
           className="navbar navbar-expand-lg text-bg-dark position-sticky top-0 fight-watch-nav"
           data-bs-theme="dark"
         >
@@ -136,14 +171,21 @@ export default function FightWatch() {
                   aria-label="Search"
                   name="name"
                 ></input>
-                <button className="btn btn-outline-danger" type="submit">
+                <button
+                  className="btn btn-outline-danger"
+                  type="submit"
+                  onClick={clickHandler}
+                >
                   Search
                 </button>
               </Form>
             </div>
           </div>
         </nav>
-        <div className="container-fluid fighter-container">
+        <div
+          className="container-fluid fighter-container"
+          style={{ maxHeight: contentHeight }}
+        >
           {fighters ? (
             <CardGrid fighters={fighters} />
           ) : (

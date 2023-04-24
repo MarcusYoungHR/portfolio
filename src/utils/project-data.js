@@ -9,7 +9,7 @@ const projectData = [
     title: "Zero Intercept Ratio Graph",
     description: "Calculates and graphs the Zero Intercept Implied Ratio",
     image: "https://fight-watch-photos.s3.us-west-2.amazonaws.com/over+recovery.png",
-    link: "http://marcus-portfolio-static-files.s3-website-us-west-2.amazonaws.com/",
+    link: "https://www.graph.marcusmyoung.com",
     imageStyle: {
       objectPosition: 'center top'
     }

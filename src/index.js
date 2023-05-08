@@ -19,6 +19,15 @@ import FightWatch, {
 import Bio from "./routes/bio";
 import Resume from "./routes/resume";
 import CoverLetter from "./routes/cover-letter";
+import Productivity, {
+  action as productivityAction,
+  loader as productivityLoader,
+} from "./routes/productivity";
+import TaskModal, {
+  loader as taskModalLoader,
+  action as taskModalAction,
+} from "./routes/task-modal";
+
 import FightWatchContextProvider from "./store/context/fight-watch-context";
 
 const router = createBrowserRouter([
@@ -63,7 +72,21 @@ const router = createBrowserRouter([
   {
     path: "/cover-letter",
     element: <CoverLetter />,
-  }
+  },
+  {
+    path: "/productivity",
+    element: <Productivity />,
+    loader: productivityLoader,
+    action: productivityAction,
+    children: [
+      {
+        path: "task-modal/:id",
+        element: <TaskModal />,
+        loader: taskModalLoader,
+        action: taskModalAction,
+      }
+    ]
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

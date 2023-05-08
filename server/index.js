@@ -5,9 +5,18 @@ const {
   insertFighter,
   loadFighters,
   removeFighter,
+  insertTask,
+  loadTasks,
+  loadTask,
+  findProgress,
+  upsertProgress,
 } = require("./database/fight-watch");
-const {updateFightDatesInterval, updateFightDates} = require("./utils/update-fighters");
+const {
+  updateFightDatesInterval,
+  updateFightDates,
+} = require("./utils/update-fighters");
 const path = require("path");
+const { format } = require("date-fns");
 
 const app = express();
 app.use(bodyParser.json());
@@ -17,7 +26,11 @@ app.use(express.static(path.join(__dirname, "../build")));
 
 // console.log(path.join(__dirname, '../build'))
 
-app.get('/graph', (req, res) => {
+const dailyProgressEntry = async() => {
+
+}
+
+app.get("/graph", (req, res) => {
   res.sendFile(path.join(__dirname, "../ember/index.html"));
 });
 
@@ -65,21 +78,83 @@ app.delete("/remove-fighter/:id", (req, res) => {
     });
 });
 
-app.get('/manual-update', (req, res) => {
-  updateFightDates()
-})
-
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, "../build/index.html"));
+app.get("/manual-update", (req, res) => {
+  updateFightDates();
 });
 
+//productivity routes
+app.post("/add-task", (req, res) => {
+  const { task } = req.body;
+  if (task.measurement === "time") {
+    task.goal =
+      Number(task.hours) * 60 * 60 * 1000 + Number(task.minutes) * 60 * 1000;
+    delete task.minutes;
+    delete task.hours;
+  } else if (task.measurement === "checkbox") {
+    task.goal = 1;
+  }
+  insertTask(task)
+    .then(() => {
+      res.send("success");
+    })
+    .catch((err) => {
+      console.log(err);
+      res.error(err);
+    });
+});
 
+app.get("/load-tasks", (req, res) => {
+  loadTasks()
+    .then((tasks) => {
+      // console.log(tasks);
+      res.send(tasks);
+    })
+    .catch((err) => {
+      console.log(err);
+      // res.error(err);
+    });
+});
+
+app.get("/load-task", (req, res) => {
+  const { id } = req.query;
+  loadTask(id)
+    .then((task) => {
+      // console.log(tasks);
+      res.send(task);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.error(err);
+    });
+});
+
+app.get("/load-progress", (req, res) => {
+  const { id } = req.query;
+  const currentDate = format(new Date(), "yyyy-MM-dd");
+  findProgress(id, currentDate)
+    .then((progress) => {
+      // console.log(tasks);
+      res.send(progress);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.error(err);
+    });
+});
+
+app.put("/update-progress", (req, res) => {
+  const { id, remaining } = req.body;
+  upsertProgress(id, remaining).then(() => {
+    res.send("success");
+  });
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../build/index.html"));
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
 updateFightDatesInterval();
-
-

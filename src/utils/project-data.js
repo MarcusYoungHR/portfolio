@@ -1,5 +1,11 @@
 const projectData = [
   {
+    title: "Productivity Tracker",
+    description: "Tracks your productivity and provides insights into your habits",
+    image: "https://fight-watch-photos.s3.us-west-2.amazonaws.com/productivity-thumbnail.png",
+    link: "/productivity"
+  },
+  {
     title: "Fight Watch",
     description: "Keeps track of MMA fighters and notifies you of their upcoming bouts",
     image: "https://fight-watch-photos.s3.us-west-2.amazonaws.com/fight-watch-thumbnail.png",

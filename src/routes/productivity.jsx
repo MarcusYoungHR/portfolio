@@ -37,18 +37,41 @@ export default function Productivity() {
         className="navbar navbar-expand-lg text-bg-dark position-sticky top-0 fight-watch-nav"
         data-bs-theme="dark"
       >
-        <div className="container-fluid"></div>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-12">
+              {" "}
+              <Link className="navbar-brand" to="/productivity/chart">
+                Chart
+              </Link>
+              <button
+                type="button"
+                className="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                Add Item
+              </button>
+              {tasks ? (
+                tasks.data.map((task) => {
+                  return (
+                    <Link
+                      to={'/productivity/task-modal/' + task.id}
+                      className="btn btn-primary"
+                      key={Math.random()}
+                    >
+                      {task.name}
+                    </Link>
+                  );
+                })
+              ) : (
+                <div>loading...</div>
+              )}
+            </div>
+          </div>
+        </div>
       </nav>
       <div className="container-fluid">
-        <button
-          type="button"
-          className="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-        >
-          Add Item
-        </button>
-
         <div
           className="modal fade"
           id="exampleModal"
@@ -239,24 +262,7 @@ export default function Productivity() {
           </div>
         </div>
         <div className="row">
-          <div className="col-12">
-            {tasks ? (
-              tasks.data.map((task) => {
-                return (
-                  <Link
-                    to={"task-modal/" + task.id}
-                    relative="path"
-                    className="btn btn-primary"
-                    key={Math.random()}
-                  >
-                    {task.name}
-                  </Link>
-                );
-              })
-            ) : (
-              <div>loading...</div>
-            )}
-          </div>
+          <div className="col-12"></div>
         </div>
         <div className="row">
           <div className="col-12">

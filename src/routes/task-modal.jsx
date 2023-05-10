@@ -2,6 +2,7 @@ import { Link, Form, useLoaderData, redirect, Outlet } from "react-router-dom";
 import { loadProgress, updateProgress } from "../http/task-modal";
 import { useState, useEffect } from "react";
 import Stopwatch from "../components/productivity/stop-watch";
+import Iterative from "../components/productivity/iterative";
 
 export async function loader({ params }) {
   const progress = await loadProgress(params);
@@ -22,14 +23,20 @@ export default function TaskModal() {
 
   useEffect(() => {
     if (progress) {
+      console.log(progress)
       setRemaining(progress.remaining);
     }
   }, [progress]);
 
   return (
     <div>
-      {progress ? progress.name : <div>loading...</div>}
-      <Stopwatch elapsedTime={remaining} setElapsedTime={setRemaining} />
+      <div>{progress && progress.name}</div>
+      {progress
+        ? progress.measurement === "time"
+          ? <Stopwatch elapsedTime={remaining} setElapsedTime={setRemaining} />
+          : <Iterative remaining={remaining} setRemaining={setRemaining} />
+        : null}
+      
       <Form method="put">
         <input type="hidden" name="remaining" value={remaining} />
         <input type="hidden" name="id" value={progress.id} />

@@ -10,6 +10,8 @@ const {
   loadTask,
   findProgress,
   upsertProgress,
+  getProgressByDate,
+  getProgressPercentageByDate,
 } = require("./database/fight-watch");
 const {
   updateFightDatesInterval,
@@ -141,6 +143,17 @@ app.get("/load-progress", (req, res) => {
       res.error(err);
     });
 });
+
+app.get('/load-progress-by-date', async (req, res) => {
+  try {
+    const data = await getProgressPercentageByDate();
+    res.send(data);
+  } catch (error) {
+    console.error('There was an error in the route: ', error);
+    res.status(500).send({ error: "An error occurred" });
+  }
+});
+
 
 app.put("/update-progress", (req, res) => {
   const { id, remaining } = req.body;

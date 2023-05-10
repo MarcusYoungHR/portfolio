@@ -1,29 +1,19 @@
 import axios from "axios";
 
 function refactorTask(task) {
-  console.log(task)
-  const {
-    Sunday,
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday,
-    ...otherKeys
-  } = task;
-  return {
-    ...otherKeys,
-    recurrence: {
-      Sunday,
-      Monday,
-      Tuesday,
-      Wednesday,
-      Thursday,
-      Friday,
-      Saturday,
-    },
+  const refactoredTask = {
+    recurrence: [],
   };
+
+  for (const key in task) {
+    if (task[key] === "on") {
+      refactoredTask.recurrence.push(key);
+    } else {
+      refactoredTask[key] = task[key];
+    }
+  }
+
+  return refactoredTask;
 }
 
 export async function addTask(task) {

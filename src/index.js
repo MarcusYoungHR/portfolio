@@ -27,6 +27,7 @@ import TaskModal, {
   loader as taskModalLoader,
   action as taskModalAction,
 } from "./routes/task-modal";
+import Chart, {loader as progressLoader} from "./routes/chart";
 
 import FightWatchContextProvider from "./store/context/fight-watch-context";
 
@@ -84,6 +85,11 @@ const router = createBrowserRouter([
         element: <TaskModal />,
         loader: taskModalLoader,
         action: taskModalAction,
+      },
+      {
+        path: "chart",
+        element: <Chart />,
+        loader: progressLoader,
       }
     ]
   },

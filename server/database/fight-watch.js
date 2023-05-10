@@ -1,6 +1,6 @@
 const { Sequelize } = require("sequelize");
-const { format } = require("date-fns");
-const cron = require ("node-cron");
+const { format, parseISO } = require("date-fns");
+const cron = require("node-cron");
 
 const {
   getCurrentDayOfWeek,
@@ -52,136 +52,197 @@ const fighters = {
   },
 };
 
+const idField = {
+  type: Sequelize.INTEGER,
+  autoIncrement: true,
+  primaryKey: true,
+};
+
+const notNullIntField = {
+  allowNull: false,
+  type: Sequelize.INTEGER,
+};
+
+const refField = (model, key) => ({
+  type: Sequelize.INTEGER,
+  references: { model, key },
+  onDelete: "CASCADE",
+});
+
 const tasks = {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  name: {
-    allowNull: false,
-    type: Sequelize.STRING,
-  },
-  description: {
-    allowNull: true,
-    type: Sequelize.STRING,
-  },
-  measurement: {
-    allowNull: false,
-    type: Sequelize.STRING,
-  },
-  goal: {
-    allowNull: false,
-    type: Sequelize.INTEGER,
-  },
-  recurrence: {
-    allowNull: false,
-    type: Sequelize.JSON,
-    get() {
-      return JSON.parse(this.getDataValue("recurrence"));
-    },
-    set(value) {
-      this.setDataValue("recurrence", JSON.stringify(value));
-    },
-  },
+  id: idField,
+  name: { allowNull: false, type: Sequelize.STRING },
+  description: { allowNull: true, type: Sequelize.STRING },
+  measurement: { allowNull: false, type: Sequelize.STRING },
+  goal: notNullIntField,
+  recurrence: { allowNull: false, type: Sequelize.JSON },
+  weight: { allowNull: true, type: Sequelize.INTEGER },
 };
 
 const progress = {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
+  id: idField,
+  name: { allowNull: false, type: Sequelize.STRING },
   remaining: {
     allowNull: false,
     type: Sequelize.INTEGER,
   },
-  date: {
-    allowNull: false,
-    type: Sequelize.DATEONLY,
-  },
-  goal: {
-    allowNull: false,
-    type: Sequelize.INTEGER,
-  },
+  date: { allowNull: false, type: Sequelize.DATEONLY },
+  goal: notNullIntField,
   percentage: {
     type: Sequelize.VIRTUAL,
     get() {
       const goal = this.getDataValue("goal");
       const remaining = this.getDataValue("remaining");
-      if (goal === 0) return 0;
-      return 100 * ((goal - remaining) / goal);
+      return goal === 0 ? 0 : 100 * ((goal - remaining) / goal);
     },
   },
+  measurement: { allowNull: false, type: Sequelize.STRING },
+  taskId: refField("Tasks", "id"),
 };
 
 const Tasks = sequelize.define("Tasks", tasks);
 const Progress = sequelize.define("Progress", progress);
+
+Progress.belongsTo(Tasks, { foreignKey: "taskId" }); // Changed to 'taskId'
+Tasks.hasMany(Progress, { foreignKey: "taskId" }); // Changed to 'taskId'
+
 const Fighters = sequelize.define("Fighters", fighters);
 
-Progress.belongsTo(Tasks, { foreignKey: "task_id", onDelete: "CASCADE" });
-Tasks.hasMany(Progress, { foreignKey: "task_id", onDelete: "CASCADE" });
-
-// sequelize.sync({ force: true }); //drops tables and recreates them
-sequelize.sync();
+sequelize.sync({ force: true }); //drops tables and recreates them
+// sequelize.sync();
 
 const findTasksByDay = async (dayOfWeek) => {
   try {
-    const dayPattern = `\"${dayOfWeek}\":\"on\"`;
-    // const tasks = await sequelize.query(
-    //   `SELECT * FROM Tasks WHERE recurrence LIKE :dayPattern;`,
-    //   {
-    //     replacements: { dayPattern: `%${dayPattern}%` },
-    //     type: Sequelize.QueryTypes.SELECT,
-    //     model: Tasks,
-    //     mapToModel: true
-    //   }
-    // );
-    const tasks = await sequelize.query(
-      "SELECT * FROM Tasks WHERE recurrence LIKE '%\"Monday\":\"on\"%';",
-      {
-        type: Sequelize.QueryTypes.SELECT,
-        model: Tasks,
-        mapToModel: true
-      }
-    );
+    const dailyTasks = await Tasks.findAll({
+      where: {
+        recurrence: {
+          [Sequelize.Op.and]: [
+            sequelize.literal(`JSON_CONTAINS(recurrence, '"${dayOfWeek}"')`),
+          ],
+        },
+      },
+    });
 
-    console.log(`Tasks with ${dayOfWeek} recurrence:`, tasks);
-    return tasks;
+    console.log(`Tasks with ${dayOfWeek} recurrence:`, dailyTasks);
+    return dailyTasks;
   } catch (error) {
-    console.error('Error querying tasks:', error);
+    console.error("Error querying tasks:", error);
   }
 };
 
+const createProgressFromTask = async (task) => {
+  const newProgress = await Progress.create({
+    remaining: task.goal,
+    date: format(new Date(), "yyyy-MM-dd"),
+    taskId: task.id,
+    goal: task.goal,
+    measurement: task.measurement,
+    name: task.name,
+  });
+
+  if (!newProgress) {
+    throw new Error("Could not create progress for the task");
+  }
+};
 
 const dailyProgressEntry = async () => {
   const currentDay = getCurrentDayOfWeek();
-  const tasks = await findTasksByDay("Monday");
-  console.log(tasks);
+  const tasks = await findTasksByDay(currentDay);
 
-}
+  for (const task of tasks) {
+    await createProgressFromTask(task);
+  }
 
-setTimeout(dailyProgressEntry, 2000)
+  console.log("Daily progress entry complete");
+};
 
+cron.schedule("0 0 * * *", dailyProgressEntry);
 
 Tasks.addHook("afterCreate", async (task, options) => {
-  console.log(task.recurrence);
-  if (hasCurrentDayKey(task.recurrence)) {
+  // console.log(task.recurrence);
+  if (hasCurrentDayKey(task)) {
     console.log("Task has current day key");
-    const newProgress = await Progress.create({
-      remaining: task.goal,
-      date: format(new Date(), "yyyy-MM-dd"),
-      task_id: task.id,
-      goal: task.goal,
-    });
 
-    if (!newProgress) {
-      throw new Error("Could not create progress for the task");
-    }
+    await createProgressFromTask(task);
+
+    // const newProgress = await Progress.create({
+    //   remaining: task.goal,
+    //   date: format(new Date(), "yyyy-MM-dd"),
+    //   taskId: task.id,
+    //   goal: task.goal,
+    // });
+
+    // if (!newProgress) {
+    //   throw new Error("Could not create progress for the task");
+    // }
   } else {
     console.log("Task does not have current day key");
   }
 });
+
+const getProgressByDate = async () => {
+  try {
+    const progressByDateAndTask = await Progress.findAll({
+      attributes: ["date"],
+      group: ["date"],
+      order: [["date", "DESC"]],
+    });
+    console.log("Progress by date and task:", progressByDateAndTask);
+    return progressByDateAndTask;
+  } catch (error) {
+    console.error(
+      "There was an error getting progress by date and task: ",
+      error
+    );
+  }
+};
+
+const getProgressPercentageByDate = async () => {
+  try {
+    const progresses = await Progress.findAll({
+      attributes: ["date", "goal", "remaining"],
+      order: [["date", "DESC"]],
+    });
+
+    const grouped = progresses.reduce((result, progress) => {
+      const date = progress.date;
+      if (!result[date]) {
+        result[date] = {
+          total: 0,
+          count: 0,
+        };
+      }
+
+      const percentage =
+        progress.goal === 0
+          ? 0
+          : 100 * ((progress.goal - progress.remaining) / progress.goal);
+      result[date].total += percentage;
+      result[date].count += 1;
+
+      return result;
+    }, {});
+
+    const averageProgressByDate = Object.entries(grouped).map(
+      ([date, data]) => {
+        const parsedDate = parseISO(date);
+        const formattedDate = format(parsedDate, "MMMM d");
+        return {
+          date: formattedDate,
+          averagePercentage: data.total / data.count,
+        };
+      }
+    );
+
+    console.log("Average progress by date:", averageProgressByDate);
+    return averageProgressByDate;
+  } catch (error) {
+    console.error(
+      "There was an error getting average progress by date: ",
+      error
+    );
+  }
+};
 
 async function insertTask(task) {
   try {
@@ -222,7 +283,7 @@ const findProgress = async (taskId, targetDate) => {
   try {
     const progressWithTask = await Progress.findOne({
       where: {
-        task_id: taskId,
+        taskId: taskId,
         date: targetDate,
       },
     });
@@ -297,4 +358,6 @@ module.exports = {
   loadTask,
   findProgress,
   upsertProgress,
+  getProgressByDate,
+  getProgressPercentageByDate,
 };

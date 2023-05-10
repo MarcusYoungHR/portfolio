@@ -7,16 +7,14 @@ function getCurrentDayOfWeek() {
   return dayOfWeek;
 }
 
-function hasCurrentDayKey(obj) {
-  console.log(obj)
+function hasCurrentDayKey({recurrence}) {
   const currentDay = getCurrentDayOfWeek();
 
-  for (const key in obj) {
-    if (key === currentDay) {
-      return true;
-    }
+  if (recurrence.includes(currentDay)) {
+    return true;
+  } else {
+    return false;
   }
-  return false;
 }
 
 module.exports = {

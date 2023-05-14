@@ -164,7 +164,7 @@ const dailyProgressEntry = async () => {
   console.log("Daily progress entry complete");
 };
 
-cron.schedule("0 0 * * *", dailyProgressEntry);
+cron.schedule("0 5 * * *", dailyProgressEntry);
 
 Tasks.addHook("afterCreate", async (task, options) => {
   // console.log(task.recurrence);

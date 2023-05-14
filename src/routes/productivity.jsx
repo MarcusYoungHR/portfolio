@@ -2,6 +2,13 @@ import { Link, Form, useLoaderData, redirect, Outlet } from "react-router-dom";
 import { useState } from "react";
 import SpinnerOverlay from "../components/spinner-overlay";
 import { addTask, loadTasks } from "../http/productivity";
+const { format } = require("date-fns");
+
+function getCurrentTime() {
+  const now = new Date();
+  const formattedTime = format(now, 'hh:mm:ss a');
+  return formattedTime;
+}
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -56,7 +63,7 @@ export default function Productivity() {
                 tasks.data.map((task) => {
                   return (
                     <Link
-                      to={'/productivity/task-modal/' + task.id}
+                      to={"/productivity/task-modal/" + task.id}
                       className="btn btn-primary"
                       key={Math.random()}
                     >
@@ -128,7 +135,7 @@ export default function Productivity() {
                       className="btn-check"
                       id="btn1"
                       autoComplete="off"
-                      name="sun"
+                      name="Sunday"
                     ></input>
                     <label className="btn btn-outline-primary" htmlFor="btn1">
                       Sun
@@ -262,7 +269,7 @@ export default function Productivity() {
           </div>
         </div>
         <div className="row">
-          <div className="col-12"></div>
+          <div className="col-12">{getCurrentTime()}</div>
         </div>
         <div className="row">
           <div className="col-12">

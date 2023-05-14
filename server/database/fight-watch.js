@@ -22,6 +22,14 @@ async function connectToDatabase() {
   }
 }
 
+function getCurrentTime() {
+  const now = new Date();
+  const formattedTime = format(now, 'hh:mm:ss a');
+  return formattedTime;
+}
+
+console.log("Current time:", getCurrentTime())
+
 // connectToDatabase();
 
 const fighters = {

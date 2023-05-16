@@ -12,6 +12,8 @@ const {
   upsertProgress,
   getProgressByDate,
   getProgressPercentageByDate,
+  upsertWastedTime,
+  findWastedTime,
 } = require("./database/fight-watch");
 const {
   updateFightDatesInterval,
@@ -26,18 +28,36 @@ const port = 4000;
 
 app.use(express.static(path.join(__dirname, "../build")));
 
-// console.log(path.join(__dirname, '../build'))
-
-const dailyProgressEntry = async() => {
-
-}
-
 app.get("/graph", (req, res) => {
   res.sendFile(path.join(__dirname, "../ember/index.html"));
 });
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
+});
+
+app.get("/wasted-time", (req, res) => {
+  findWastedTime()
+    .then((wastedTime) => {
+      res.send(wastedTime);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.error(err);
+    });
+});
+
+app.put("/wasted-time", (req, res) => {
+  console.log(req.body)
+  const { time } = req.body;
+  upsertWastedTime(time)
+    .then(() => {
+      res.send("success");
+    })
+    .catch((err) => {
+      console.log(err);
+      res.error(err);
+    });
 });
 
 app.post("/search", (req, res) => {
@@ -144,16 +164,15 @@ app.get("/load-progress", (req, res) => {
     });
 });
 
-app.get('/load-progress-by-date', async (req, res) => {
+app.get("/load-progress-by-date", async (req, res) => {
   try {
     const data = await getProgressPercentageByDate();
     res.send(data);
   } catch (error) {
-    console.error('There was an error in the route: ', error);
+    console.error("There was an error in the route: ", error);
     res.status(500).send({ error: "An error occurred" });
   }
 });
-
 
 app.put("/update-progress", (req, res) => {
   const { id, remaining } = req.body;

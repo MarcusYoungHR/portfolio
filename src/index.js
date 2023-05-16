@@ -1,6 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider, useLocation } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useLocation,
+} from "react-router-dom";
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -23,13 +27,22 @@ import Productivity, {
   action as productivityAction,
   loader as productivityLoader,
 } from "./routes/productivity";
-import TaskModal, {
-  loader as taskModalLoader,
-  action as taskModalAction,
-} from "./routes/task-modal";
-import Chart, {loader as progressLoader} from "./routes/chart";
+import Progress, {
+  loader as ProgressLoader,
+  action as ProgressAction,
+} from "./routes/progress";
+import Chart, { loader as chartLoader } from "./routes/chart";
+import WastedTime, {
+  loader as wastedTimeLoader,
+  action as wastedTimeAction,
+} from "./routes/wasted-time";
+import Tasks, {
+  loader as tasksLoader,
+  action as tasksAction,
+} from "./routes/tasks";
 
 import FightWatchContextProvider from "./store/context/fight-watch-context";
+import ProductivityContextProvider from "./store/context/productivity-context";
 
 const router = createBrowserRouter([
   {
@@ -76,27 +89,42 @@ const router = createBrowserRouter([
   },
   {
     path: "/productivity",
-    element: <Productivity />,
+    element: (
+      <ProductivityContextProvider>
+        <Productivity />
+      </ProductivityContextProvider>
+    ),
     loader: productivityLoader,
     action: productivityAction,
     children: [
       {
-        path: "task-modal/:id",
-        element: <TaskModal />,
-        loader: taskModalLoader,
-        action: taskModalAction,
+        index: true,
+        element: <Tasks />,
+        action: tasksAction,
+      },
+      {
+        path: "progress/:id",
+        element: <Progress />,
+        loader: ProgressLoader,
+        action: ProgressAction,
       },
       {
         path: "chart",
         element: <Chart />,
-        loader: progressLoader,
-      }
-    ]
+        loader: chartLoader,
+      },
+      {
+        path: "wasted-time",
+        element: <WastedTime />,
+        loader: wastedTimeLoader,
+        action: wastedTimeAction,
+      },
+    ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <RouterProvider router={router} />
+  <RouterProvider router={router} />
 );
 
 //make main.jsx the entry point in package.json

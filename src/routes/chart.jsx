@@ -79,8 +79,8 @@ export default function Chart() {
       {
         label: "Completed %",
         data: yAxisValues,
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        borderColor: "rgb(52, 178, 51)",
+        backgroundColor: "rgba(52, 178, 51, 0.5)",
       }
     ],
   };

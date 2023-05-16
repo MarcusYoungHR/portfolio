@@ -1,58 +1,40 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 const Stopwatch = ({ elapsedTime, setElapsedTime }) => {
   const [isRunning, setIsRunning] = useState(false);
-  const [intervalId, setIntervalId] = useState(null);
-  const startTimeRef = useRef(null);
-
-  const updateElapsedTime = () => {
-    const currentTime = performance.now();
-    const newElapsedTime = Math.max(startTimeRef.current - currentTime, 0);
-    setElapsedTime(newElapsedTime);
-
-    if (newElapsedTime <= 0) {
-      setIsRunning(false);
-      clearInterval(intervalId);
-    }
-  };
+  const [startTime, setStartTime] = useState(null);
 
   useEffect(() => {
+    let intervalId;
+
     if (isRunning) {
-      startTimeRef.current = performance.now() + elapsedTime;
-      const id = setInterval(() => {
-        requestAnimationFrame(updateElapsedTime);
+      setStartTime(Date.now() - elapsedTime);
+      intervalId = setInterval(() => {
+        const now = Date.now();
+        setElapsedTime(Math.floor((now - startTime)));
       }, 1000);
-      setIntervalId(id);
-    } else {
-      clearInterval(intervalId);
     }
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [isRunning]);
+    return () => clearInterval(intervalId); // Clean up interval on unmount
+  }, [isRunning, startTime, setElapsedTime, elapsedTime]);
 
-  const formatTime = (time) => {
-    const seconds = Math.floor(time / 1000) % 60;
-    const minutes = Math.floor(time / 60000) % 60;
-    const hours = Math.floor(time / 3600000);
-
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
-
-  const handleStartStop = () => {
+  const toggleRunning = () => {
     setIsRunning(!isRunning);
   };
 
-  const handleReset = () => {
-    setElapsedTime(0);
+  const getTime = (milliseconds) => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+
+    return [h, m, s].map((v) => (v < 10 ? "0" + v : v)).join(":");
   };
 
   return (
     <div>
-      <h1>{formatTime(elapsedTime)}</h1>
-      <button onClick={handleStartStop}>{isRunning ? 'Stop' : 'Start'}</button>
-      <button onClick={handleReset}>Reset</button>
+      <h1>{getTime(elapsedTime)}</h1>
+      <button onClick={toggleRunning}>{isRunning ? "Stop" : "Start"}</button>
     </div>
   );
 };

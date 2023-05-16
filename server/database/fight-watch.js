@@ -108,16 +108,66 @@ const progress = {
   taskId: refField("Tasks", "id"),
 };
 
+const wastedTime = {
+  id: idField,
+  time: { allowNull: false, type: Sequelize.INTEGER },
+  date: { allowNull: false, type: Sequelize.DATEONLY, unique: true },
+}
+
 const Tasks = sequelize.define("Tasks", tasks);
 const Progress = sequelize.define("Progress", progress);
+const Fighters = sequelize.define("Fighters", fighters);
+const WastedTime = sequelize.define("WastedTime", wastedTime);
 
 Progress.belongsTo(Tasks, { foreignKey: "taskId" }); // Changed to 'taskId'
 Tasks.hasMany(Progress, { foreignKey: "taskId" }); // Changed to 'taskId'
 
-const Fighters = sequelize.define("Fighters", fighters);
 
-sequelize.sync({ force: true }); //drops tables and recreates them
-// sequelize.sync();
+// sequelize.sync({ force: true }); //drops tables and recreates them
+sequelize.sync();
+
+const upsertWastedTime = async (time) => {
+  try {
+    const wastedTime = await WastedTime.upsert({
+      time,
+      date: format(new Date(), "yyyy-MM-dd"),
+    });
+
+    console.log("Wasted time:", wastedTime);
+    return wastedTime;
+  } catch (error) {
+    console.error("Error creating wasted time:", error);
+  }
+}
+
+const findWastedTime = async () => {
+  try {
+    const wastedTime = await WastedTime.findOne({
+      where: {
+        date: format(new Date(), "yyyy-MM-dd"),
+      },
+    });
+
+    console.log("Wasted time:", wastedTime);
+    return wastedTime;
+  } catch (error) {
+    console.error("Error querying wasted time:", error);
+  }
+};
+
+const dailyWastedTimeEntry = async () => {
+  try {
+    const wastedTime = await WastedTime.create({
+      time: 0,
+      date: format(new Date(), "yyyy-MM-dd"),
+    });
+
+    console.log("Wasted time:", wastedTime);
+    return wastedTime;
+  } catch (error) {
+    console.error("Error creating wasted time:", error);
+  }
+}
 
 const findTasksByDay = async (dayOfWeek) => {
   try {
@@ -164,7 +214,10 @@ const dailyProgressEntry = async () => {
   console.log("Daily progress entry complete");
 };
 
-cron.schedule("0 5 * * *", dailyProgressEntry);
+cron.schedule("0 5 * * *", () => {
+  dailyProgressEntry()
+  dailyWastedTimeEntry();
+});
 
 Tasks.addHook("afterCreate", async (task, options) => {
   // console.log(task.recurrence);
@@ -173,16 +226,6 @@ Tasks.addHook("afterCreate", async (task, options) => {
 
     await createProgressFromTask(task);
 
-    // const newProgress = await Progress.create({
-    //   remaining: task.goal,
-    //   date: format(new Date(), "yyyy-MM-dd"),
-    //   taskId: task.id,
-    //   goal: task.goal,
-    // });
-
-    // if (!newProgress) {
-    //   throw new Error("Could not create progress for the task");
-    // }
   } else {
     console.log("Task does not have current day key");
   }
@@ -368,4 +411,6 @@ module.exports = {
   upsertProgress,
   getProgressByDate,
   getProgressPercentageByDate,
+  upsertWastedTime,
+  findWastedTime
 };

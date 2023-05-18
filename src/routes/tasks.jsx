@@ -1,6 +1,6 @@
 import { Link, Form, useLoaderData, redirect, Outlet } from "react-router-dom";
 import { useState, useContext } from "react";
-import { addTask, loadTasks } from "../http/productivity";
+import { addTask } from "../http/productivity";
 import { ProductivityContext } from "../store/context/productivity-context";
 
 export async function action() {}
@@ -8,8 +8,6 @@ export async function action() {}
 export default function Tasks() {
   // const [tasks, setTasks] = useState([]);
   const { tasks, updateTasks } = useContext(ProductivityContext);
-
-  console.log(tasks);
 
   return (
     <div>

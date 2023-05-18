@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,8 +10,8 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { getAllProgress } from "../http/chart";
-import { useLoaderData } from "react-router-dom";
+import { ProductivityContext } from "../store/context/productivity-context";
+
 
 ChartJS.register(
   CategoryScale,
@@ -36,32 +36,51 @@ const options = {
   },
 };
 
-export async function loader() {
-  const progress = await getAllProgress();
-  console.log(progress);
-  return progress;
-}
-
 export default function Chart() {
+  const {progress, wastedTime, tasks} = useContext(ProductivityContext);
+
   const [xAxisValues, setXAxisValues] = useState([]);
   const [yAxisValues, setYAxisValues] = useState([]);
 
-  const progress = useLoaderData();
+  const groupProgressByDate = (progress) => {
+    const groupedProgress = progress.reduce((acc, curr) => {
+      if (!acc[curr.date]) {
+        acc[curr.date] = {
+            date: curr.date,
+            total: curr.percentage,
+            count: 1
+        };
+    } else {
+        acc[curr.date].total += curr.percentage;
+        acc[curr.date].count += 1;
+    }
+    return acc;
+    }, {})
+
+    return Object.values(groupedProgress).map((item) => {
+      return {
+        date: item.date,
+        percentage: item.total / item.count
+      }
+    })
+  }
 
   useEffect(() => {
     const tempXAxisValues = [];
     const tempYAxisValues = [];
 
-    progress.forEach((item) => {
+    const pointsArray = groupProgressByDate(progress);
+
+    console.log('pointsArray', pointsArray)
+
+    pointsArray.forEach((item) => {
       tempXAxisValues.push(item.date);
-      tempYAxisValues.push(item.averagePercentage);
+      tempYAxisValues.push(item.percentage);
     });
 
     setXAxisValues(tempXAxisValues);
     setYAxisValues(tempYAxisValues);
   }, [progress]);
-
-  console.log(progress);
 
   const labels = [
     "January",

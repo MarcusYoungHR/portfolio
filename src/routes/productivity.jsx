@@ -1,16 +1,10 @@
 import { Link, Form, useLoaderData, redirect, Outlet } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import SpinnerOverlay from "../components/spinner-overlay";
-import { addTask, loadTasks } from "../http/productivity";
+import { addTask, loadProductivityData } from "../http/productivity";
 import GoalModal from "../components/productivity/goal-modal";
 import { format } from "date-fns";
 import { ProductivityContext } from "../store/context/productivity-context";
-
-function getCurrentTime() {
-  const now = new Date();
-  const formattedTime = format(now, "hh:mm:ss a");
-  return formattedTime;
-}
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -21,21 +15,23 @@ export async function action({ request }) {
 }
 
 export async function loader() {
-  const tasks = await loadTasks();
-  return tasks;
+  const productivityData = await loadProductivityData();
+  return productivityData.data;
 }
 
 export default function Productivity() {
   const [type, setType] = useState(null);
-  const { tasks, updateTasks } = useContext(ProductivityContext);
+  const { updateTasks, updateProgress, updateWastedTime } = useContext(ProductivityContext);
 
-  const dataTasks = useLoaderData();
+  const productivityData = useLoaderData();
 
   useEffect(() => {
-    if (dataTasks) {
-      updateTasks(dataTasks.data);
+    if (productivityData) {
+      updateTasks(productivityData.tasks);
+      updateProgress(productivityData.progress);
+      updateWastedTime(productivityData.wastedTime);
     }
-  }, [dataTasks]);
+  }, [productivityData]);
 
   const handleTypeChange = (event) => {
     setType(event.target.value);

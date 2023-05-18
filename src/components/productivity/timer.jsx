@@ -1,15 +1,36 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from "react";
+import { useParams } from "react-router-dom";
+import { ProductivityContext } from "../../store/context/productivity-context";
+import { findCurrentProgress, getTodaysDate } from "../../utils/productivity";
 
-const Timer = ({ remaining, setRemaining }) => {
+const Timer = () => {
+  const { taskId } = useParams();
+  const { progress, updateProgress } = useContext(ProductivityContext);
   const [isRunning, setIsRunning] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
-  const [alarmAudio] = useState(new Audio(`${process.env.PUBLIC_URL}/sounds/alarm.wav`)); // Update here
+  const [alarmAudio] = useState(
+    new Audio(`${process.env.PUBLIC_URL}/sounds/alarm.wav`)
+  ); // Update here
   const startTimeRef = useRef(null);
 
-  const updateRemaining = () => {
+  const today = getTodaysDate();
+  const idNumber = Number(taskId);
+
+  const currentProgress = findCurrentProgress(idNumber, today, progress);
+  const { remaining, id } = currentProgress;
+
+  const updateRemaining = (id, remaining) => {
+    updateProgress((prevProgress) =>
+      prevProgress.map((item) =>
+        item.id === id ? { ...item, remaining } : item
+      )
+    );
+  };
+
+  const handleUpdate = () => {
     const currentTime = performance.now();
     const newRemaining = Math.max(startTimeRef.current - currentTime, 0);
-    setRemaining(newRemaining);
+    updateRemaining(id, newRemaining);
 
     if (newRemaining <= 0) {
       setIsRunning(false);
@@ -19,26 +40,10 @@ const Timer = ({ remaining, setRemaining }) => {
   };
 
   useEffect(() => {
-    alarmAudio.loop = true;
-
-    if (remaining <= 0) {
-      alarmAudio.play();
-    } else {
-      alarmAudio.pause();
-      alarmAudio.currentTime = 0;
-    }
-
-    return () => {
-      alarmAudio.pause();
-      alarmAudio.currentTime = 0;
-    };
-  }, [remaining]);
-
-  useEffect(() => {
     if (isRunning) {
       startTimeRef.current = performance.now() + remaining;
       const id = setInterval(() => {
-        requestAnimationFrame(updateRemaining);
+        requestAnimationFrame(handleUpdate);
       }, 1000);
       setIntervalId(id);
     } else {
@@ -55,26 +60,19 @@ const Timer = ({ remaining, setRemaining }) => {
     const minutes = Math.floor(time / 60000) % 60;
     const hours = Math.floor(time / 3600000);
 
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
   const handleStartStop = () => {
     setIsRunning(!isRunning);
   };
 
-  const handleReset = () => {
-    setRemaining(0);
-  };
-
-  const handlePlaySound = () => {
-    alarmAudio.play();
-  };
-
   return (
     <div>
       <h1>{formatTime(remaining)}</h1>
-      <button onClick={handleStartStop}>{isRunning ? 'Stop' : 'Start'}</button>
-      <button onClick={handleReset}>Reset</button>
+      <button onClick={handleStartStop}>{isRunning ? "Stop" : "Start"}</button>
     </div>
   );
 };

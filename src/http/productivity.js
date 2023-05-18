@@ -34,8 +34,19 @@ export async function addTask(task) {
     });
 }
 
-export async function loadTasks() {
-  return axios.get("/load-tasks").then((tasks) => {
-    return tasks;
+export async function loadProductivityData() {
+  return axios.get("/productivity").then((data) => {
+    return data;
+  });
+}
+
+export async function updateWastedTime(wastedTime) {
+  const response = await axios.put('/wasted-time', wastedTime);
+  return response
+}
+
+export async function updateProgress(data) {
+  return axios.put("/update-progress", data).then((progress) => {
+    return progress;
   });
 }

@@ -1,13 +1,10 @@
-import { Link, Form, useLoaderData, redirect, Outlet } from "react-router-dom";
-import { loadProgress, updateProgress } from "../http/progress";
-import { useState, useEffect } from "react";
+import { Form, useParams } from "react-router-dom";
+import { updateProgress } from "../http/productivity";
+import { useContext } from "react";
 import Timer from "../components/productivity/timer";
 import Iterative from "../components/productivity/iterative";
-
-export async function loader({ params }) {
-  const progress = await loadProgress(params);
-  return progress.data;
-}
+import { ProductivityContext } from "../store/context/productivity-context";
+import { findCurrentProgress, getTodaysDate } from "../utils/productivity";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -17,33 +14,34 @@ export async function action({ request }) {
 }
 
 export default function Progress() {
-  const [remaining, setRemaining] = useState(0);
+  const { taskId } = useParams();
+  const { progress } = useContext(ProductivityContext);
+  const today = getTodaysDate()
+  const idNumber = Number(taskId);
 
-  const progress = useLoaderData();
+  const currentProgress = findCurrentProgress(idNumber, today, progress);
 
-  useEffect(() => {
-    if (progress) {
-      console.log(progress)
-      setRemaining(progress.remaining);
-    }
-  }, [progress]);
+  if (!currentProgress) {
+    return <div>No progress found</div>;
+  }
 
   return (
-    <div>
-      <div>{progress && progress.name}</div>
-      {progress
-        ? progress.measurement === "time"
-          ? <Timer remaining={remaining} setRemaining={setRemaining} />
-          : <Iterative remaining={remaining} setRemaining={setRemaining} />
-        : null}
-      
+    <>
+      <div>{currentProgress.name}</div>
+
+      {currentProgress.measurement === "time" ? <Timer /> : <Iterative />}
+
       <Form method="put">
-        <input type="hidden" name="remaining" value={remaining} />
-        <input type="hidden" name="id" value={progress.id} />
+        <input
+          type="hidden"
+          name="remaining"
+          value={currentProgress.remaining}
+        />
+        <input type="hidden" name="id" value={currentProgress.id} />
         <button type="submit" className="btn btn-primary">
           Update
         </button>
       </Form>
-    </div>
+    </>
   );
 }

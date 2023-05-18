@@ -27,19 +27,10 @@ import Productivity, {
   action as productivityAction,
   loader as productivityLoader,
 } from "./routes/productivity";
-import Progress, {
-  loader as ProgressLoader,
-  action as ProgressAction,
-} from "./routes/progress";
-import Chart, { loader as chartLoader } from "./routes/chart";
-import WastedTime, {
-  loader as wastedTimeLoader,
-  action as wastedTimeAction,
-} from "./routes/wasted-time";
-import Tasks, {
-  loader as tasksLoader,
-  action as tasksAction,
-} from "./routes/tasks";
+import Progress, { action as ProgressAction } from "./routes/progress";
+import Chart from "./routes/chart";
+import WastedTime, { action as wastedTimeAction } from "./routes/wasted-time";
+import Tasks, { action as tasksAction } from "./routes/tasks";
 
 import FightWatchContextProvider from "./store/context/fight-watch-context";
 import ProductivityContextProvider from "./store/context/productivity-context";
@@ -103,20 +94,17 @@ const router = createBrowserRouter([
         action: tasksAction,
       },
       {
-        path: "progress/:id",
+        path: "progress/:taskId",
         element: <Progress />,
-        loader: ProgressLoader,
         action: ProgressAction,
       },
       {
         path: "chart",
         element: <Chart />,
-        loader: chartLoader,
       },
       {
         path: "wasted-time",
         element: <WastedTime />,
-        loader: wastedTimeLoader,
         action: wastedTimeAction,
       },
     ],

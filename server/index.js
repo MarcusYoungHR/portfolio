@@ -6,21 +6,18 @@ const {
   loadFighters,
   removeFighter,
   insertTask,
-  loadTasks,
-  loadTask,
-  findProgress,
   upsertProgress,
-  getProgressByDate,
-  getProgressPercentageByDate,
   upsertWastedTime,
   findWastedTime,
+  findAllTasks,
+  findAllProgress,
+  findAllWastedTime,
 } = require("./database/fight-watch");
 const {
   updateFightDatesInterval,
   updateFightDates,
 } = require("./utils/update-fighters");
 const path = require("path");
-const { format } = require("date-fns");
 
 const app = express();
 app.use(bodyParser.json());
@@ -48,7 +45,7 @@ app.get("/wasted-time", (req, res) => {
 });
 
 app.put("/wasted-time", (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const { time } = req.body;
   upsertWastedTime(time)
     .then(() => {
@@ -105,6 +102,28 @@ app.get("/manual-update", (req, res) => {
 });
 
 //productivity routes
+
+app.get("/productivity", (req, res) => {
+  const results = {};
+  findAllTasks()
+    .then((tasks) => {
+      results.tasks = tasks;
+      return findAllProgress();
+    })
+    .then((progress) => {
+      results.progress = progress;
+      return findAllWastedTime();
+    })
+    .then((wastedTime) => {
+      results.wastedTime = wastedTime;
+      res.send(results);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.error(err);
+    });
+});
+
 app.post("/add-task", (req, res) => {
   const { task } = req.body;
   if (task.measurement === "time") {
@@ -125,54 +144,6 @@ app.post("/add-task", (req, res) => {
     });
 });
 
-app.get("/load-tasks", (req, res) => {
-  loadTasks()
-    .then((tasks) => {
-      // console.log(tasks);
-      res.send(tasks);
-    })
-    .catch((err) => {
-      console.log(err);
-      // res.error(err);
-    });
-});
-
-app.get("/load-task", (req, res) => {
-  const { id } = req.query;
-  loadTask(id)
-    .then((task) => {
-      // console.log(tasks);
-      res.send(task);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.error(err);
-    });
-});
-
-app.get("/load-progress", (req, res) => {
-  const { id } = req.query;
-  const currentDate = format(new Date(), "yyyy-MM-dd");
-  findProgress(id, currentDate)
-    .then((progress) => {
-      // console.log(tasks);
-      res.send(progress);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.error(err);
-    });
-});
-
-app.get("/load-progress-by-date", async (req, res) => {
-  try {
-    const data = await getProgressPercentageByDate();
-    res.send(data);
-  } catch (error) {
-    console.error("There was an error in the route: ", error);
-    res.status(500).send({ error: "An error occurred" });
-  }
-});
 
 app.put("/update-progress", (req, res) => {
   const { id, remaining } = req.body;

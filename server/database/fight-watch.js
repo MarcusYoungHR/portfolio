@@ -24,11 +24,11 @@ async function connectToDatabase() {
 
 function getCurrentTime() {
   const now = new Date();
-  const formattedTime = format(now, 'hh:mm:ss a');
+  const formattedTime = format(now, "hh:mm:ss a");
   return formattedTime;
 }
 
-console.log("Current time:", getCurrentTime())
+console.log("Current time:", getCurrentTime());
 
 // connectToDatabase();
 
@@ -112,7 +112,7 @@ const wastedTime = {
   id: idField,
   time: { allowNull: false, type: Sequelize.INTEGER },
   date: { allowNull: false, type: Sequelize.DATEONLY, unique: true },
-}
+};
 
 const Tasks = sequelize.define("Tasks", tasks);
 const Progress = sequelize.define("Progress", progress);
@@ -122,9 +122,38 @@ const WastedTime = sequelize.define("WastedTime", wastedTime);
 Progress.belongsTo(Tasks, { foreignKey: "taskId" }); // Changed to 'taskId'
 Tasks.hasMany(Progress, { foreignKey: "taskId" }); // Changed to 'taskId'
 
-
 // sequelize.sync({ force: true }); //drops tables and recreates them
 sequelize.sync();
+
+const findAllTasks = async () => {
+  try {
+    const tasks = await Tasks.findAll();
+    console.log("Tasks:", tasks);
+    return tasks;
+  } catch (error) {
+    console.error("Error querying tasks:", error);
+  }
+};
+
+const findAllProgress = async () => {
+  try {
+    const progress = await Progress.findAll();
+    console.log("Progress:", progress);
+    return progress;
+  } catch (error) {
+    console.error("Error querying progress:", error);
+  }
+};
+
+const findAllWastedTime = async () => {
+  try {
+    const wastedTime = await WastedTime.findAll();
+    console.log("Wasted time:", wastedTime);
+    return wastedTime;
+  } catch (error) {
+    console.error("Error querying wasted time:", error);
+  }
+};
 
 const upsertWastedTime = async (time) => {
   try {
@@ -138,7 +167,7 @@ const upsertWastedTime = async (time) => {
   } catch (error) {
     console.error("Error creating wasted time:", error);
   }
-}
+};
 
 const findWastedTime = async () => {
   try {
@@ -167,7 +196,7 @@ const dailyWastedTimeEntry = async () => {
   } catch (error) {
     console.error("Error creating wasted time:", error);
   }
-}
+};
 
 const findTasksByDay = async (dayOfWeek) => {
   try {
@@ -215,7 +244,7 @@ const dailyProgressEntry = async () => {
 };
 
 cron.schedule("0 5 * * *", () => {
-  dailyProgressEntry()
+  dailyProgressEntry();
   dailyWastedTimeEntry();
 });
 
@@ -225,75 +254,10 @@ Tasks.addHook("afterCreate", async (task, options) => {
     console.log("Task has current day key");
 
     await createProgressFromTask(task);
-
   } else {
     console.log("Task does not have current day key");
   }
 });
-
-const getProgressByDate = async () => {
-  try {
-    const progressByDateAndTask = await Progress.findAll({
-      attributes: ["date"],
-      group: ["date"],
-      order: [["date", "DESC"]],
-    });
-    console.log("Progress by date and task:", progressByDateAndTask);
-    return progressByDateAndTask;
-  } catch (error) {
-    console.error(
-      "There was an error getting progress by date and task: ",
-      error
-    );
-  }
-};
-
-const getProgressPercentageByDate = async () => {
-  try {
-    const progresses = await Progress.findAll({
-      attributes: ["date", "goal", "remaining"],
-      order: [["date", "DESC"]],
-    });
-
-    const grouped = progresses.reduce((result, progress) => {
-      const date = progress.date;
-      if (!result[date]) {
-        result[date] = {
-          total: 0,
-          count: 0,
-        };
-      }
-
-      const percentage =
-        progress.goal === 0
-          ? 0
-          : 100 * ((progress.goal - progress.remaining) / progress.goal);
-      result[date].total += percentage;
-      result[date].count += 1;
-
-      return result;
-    }, {});
-
-    const averageProgressByDate = Object.entries(grouped).map(
-      ([date, data]) => {
-        const parsedDate = parseISO(date);
-        const formattedDate = format(parsedDate, "MMMM d");
-        return {
-          date: formattedDate,
-          averagePercentage: data.total / data.count,
-        };
-      }
-    );
-
-    console.log("Average progress by date:", averageProgressByDate);
-    return averageProgressByDate;
-  } catch (error) {
-    console.error(
-      "There was an error getting average progress by date: ",
-      error
-    );
-  }
-};
 
 async function insertTask(task) {
   try {
@@ -304,55 +268,6 @@ async function insertTask(task) {
     console.error("Error while creating a new task:", error);
   }
 }
-
-const loadTasks = () => {
-  return Tasks.findAll();
-};
-
-const loadTask = async (id) => {
-  try {
-    const task = await Tasks.findOne({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!task) {
-      throw new Error("Task not found");
-    }
-
-    return task;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-const findProgress = async (taskId, targetDate) => {
-  console.log("Finding progress with task id:", taskId);
-  console.log("Finding progress with target date:", targetDate);
-  try {
-    const progressWithTask = await Progress.findOne({
-      where: {
-        taskId: taskId,
-        date: targetDate,
-      },
-    });
-
-    if (!progressWithTask) {
-      console.log("Progress not found");
-      return;
-    }
-
-    console.log(
-      "Progress with Task:",
-      JSON.stringify(progressWithTask, null, 2)
-    );
-    return progressWithTask;
-  } catch (error) {
-    console.error("Error while fetching progress with task:", error);
-  }
-};
 
 async function upsertProgress(id, newRemaining) {
   try {
@@ -405,12 +320,10 @@ module.exports = {
   removeFighter,
   updateFighter,
   insertTask,
-  loadTasks,
-  loadTask,
-  findProgress,
   upsertProgress,
-  getProgressByDate,
-  getProgressPercentageByDate,
   upsertWastedTime,
-  findWastedTime
+  findWastedTime,
+  findAllWastedTime,
+  findAllProgress,
+  findAllTasks,
 };

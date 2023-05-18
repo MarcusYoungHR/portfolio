@@ -1,7 +1,9 @@
 import Stopwatch from "../components/productivity/stop-watch";
-import { useState, useEffect } from "react";
-import { getWastedTime, updateWastedTime } from "../http/wasted-time";
-import { Form, useLoaderData } from "react-router-dom";
+import { useContext } from "react";
+import { updateWastedTime } from "../http/productivity";
+import { Form} from "react-router-dom";
+import { ProductivityContext } from "../store/context/productivity-context";
+import { findCurrentWastedTime, getTodaysDate } from "../utils/productivity";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -10,28 +12,22 @@ export async function action({ request }) {
   return null;
 }
 
-export async function loader() {
-  const wastedTime = await getWastedTime();
-  return wastedTime.data
-}
-
 export default function WastedTime() {
-  const [elapsedTime, setElapsedTime] = useState(0);
+  const {wastedTime} = useContext(ProductivityContext);
 
-  const wastedTime = useLoaderData();
+  const today = getTodaysDate()
 
-  useEffect(() => {
-    if (wastedTime) {
-      setElapsedTime(wastedTime.time);
-    }
-  }, [wastedTime]);
+  const currentWastedTime = findCurrentWastedTime(today, wastedTime);
+
+  if(!currentWastedTime) {
+    return <div>No wasted time found</div>
+  }
 
   return (
     <>
-    {}
-      <Stopwatch elapsedTime={elapsedTime} setElapsedTime={setElapsedTime} />
+      <Stopwatch/>
       <Form method="post">
-        <input type="hidden" name="time" value={elapsedTime} />
+        <input type="hidden" name="time" value={currentWastedTime.time} />
         <button type="submit" className="btn btn-primary">
           Update
         </button>

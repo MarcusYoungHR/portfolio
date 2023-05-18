@@ -1,22 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { ProductivityContext } from "../../store/context/productivity-context";
+import { findCurrentWastedTime, getTodaysDate } from "../../utils/productivity";
 
-const Stopwatch = ({ elapsedTime, setElapsedTime }) => {
+const Stopwatch = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [startTime, setStartTime] = useState(null);
+  const { wastedTime, updateWastedTime } = useContext(ProductivityContext);
+
+  console.log("wastedTime", wastedTime);
+
+  const today = getTodaysDate();
+
+  const currentWastedTime = findCurrentWastedTime(today, wastedTime);
+
+  const { time, id } = currentWastedTime;
+
+  const handleUpdate = (newTime) => {
+    // Find the index of the matching item
+    const index = wastedTime.findIndex((item) => item.id === id);
+
+    // If we found the item
+    if (index !== -1) {
+      // Create a new copy of wastedTime
+      const updatedWastedTime = [...wastedTime];
+
+      // Update the time of the matching item
+      updatedWastedTime[index].time = newTime;
+
+      // Call updateWastedTime with the updated array
+      updateWastedTime(updatedWastedTime);
+    }
+  };
 
   useEffect(() => {
     let intervalId;
 
     if (isRunning) {
-      setStartTime(Date.now() - elapsedTime);
+      setStartTime(Date.now() - time);
       intervalId = setInterval(() => {
         const now = Date.now();
-        setElapsedTime(Math.floor((now - startTime)));
+        handleUpdate(Math.floor(now - startTime));
       }, 1000);
     }
 
     return () => clearInterval(intervalId); // Clean up interval on unmount
-  }, [isRunning, startTime, setElapsedTime, elapsedTime]);
+  }, [isRunning, startTime, time]);
 
   const toggleRunning = () => {
     setIsRunning(!isRunning);
@@ -33,7 +61,7 @@ const Stopwatch = ({ elapsedTime, setElapsedTime }) => {
 
   return (
     <div>
-      <h1>{getTime(elapsedTime)}</h1>
+      <h1>{getTime(time)}</h1>
       <button onClick={toggleRunning}>{isRunning ? "Stop" : "Start"}</button>
     </div>
   );

@@ -169,21 +169,6 @@ const upsertWastedTime = async (time) => {
   }
 };
 
-const findWastedTime = async () => {
-  try {
-    const wastedTime = await WastedTime.findOne({
-      where: {
-        date: format(new Date(), "yyyy-MM-dd"),
-      },
-    });
-
-    console.log("Wasted time:", wastedTime);
-    return wastedTime;
-  } catch (error) {
-    console.error("Error querying wasted time:", error);
-  }
-};
-
 const dailyWastedTimeEntry = async () => {
   try {
     const wastedTime = await WastedTime.create({
@@ -322,7 +307,6 @@ module.exports = {
   insertTask,
   upsertProgress,
   upsertWastedTime,
-  findWastedTime,
   findAllWastedTime,
   findAllProgress,
   findAllTasks,

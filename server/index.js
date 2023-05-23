@@ -8,7 +8,6 @@ const {
   insertTask,
   upsertProgress,
   upsertWastedTime,
-  findWastedTime,
   findAllTasks,
   findAllProgress,
   findAllWastedTime,
@@ -31,17 +30,6 @@ app.get("/graph", (req, res) => {
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
-});
-
-app.get("/wasted-time", (req, res) => {
-  findWastedTime()
-    .then((wastedTime) => {
-      res.send(wastedTime);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.error(err);
-    });
 });
 
 app.put("/wasted-time", (req, res) => {

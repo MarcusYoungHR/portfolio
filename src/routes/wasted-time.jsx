@@ -28,6 +28,7 @@ export default function WastedTime() {
       <Stopwatch/>
       <Form method="post">
         <input type="hidden" name="time" value={currentWastedTime.time} />
+        <input type="hidden" name="date" value={currentWastedTime.date} />
         <button type="submit" className="btn btn-primary">
           Update
         </button>

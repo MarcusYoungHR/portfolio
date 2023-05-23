@@ -34,8 +34,8 @@ app.get("/", (req, res) => {
 
 app.put("/wasted-time", (req, res) => {
   console.log(req.body);
-  const { time } = req.body;
-  upsertWastedTime(time)
+  const { time, date } = req.body;
+  upsertWastedTime(time, date)
     .then(() => {
       res.send("success");
     })

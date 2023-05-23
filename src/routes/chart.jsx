@@ -12,7 +12,6 @@ import {
 import { Line } from "react-chartjs-2";
 import { ProductivityContext } from "../store/context/productivity-context";
 import { parseISO, eachDayOfInterval, format } from "date-fns";
-import { get } from "jquery";
 
 function getDatesFromArray(arr) {
   // Check if array is empty or does not contain necessary data
@@ -34,8 +33,9 @@ function getDatesFromArray(arr) {
 }
 
 const colors = [
+  [128, 128, 0], // Olive
+  [0, 255, 0], //Green
   [255, 0, 0], // Red
-  [0, 255, 0], // Green
   [0, 0, 255], // Blue
   [255, 255, 0], // Yellow
   [0, 255, 255], // Cyan
@@ -43,7 +43,6 @@ const colors = [
   [128, 0, 0], // Maroon
   [0, 128, 0], // DarkGreen
   [0, 0, 128], // Navy
-  [128, 128, 0], // Olive
   [128, 0, 128], // Purple
   [0, 128, 128], // Teal
   [192, 192, 192], // Silver
@@ -66,18 +65,21 @@ function rgbaString(array, opacity) {
 
 const groupProgressByDate = (progress) => {
   const groupedProgress = progress.reduce((acc, curr) => {
-    if (!acc[curr.date]) {
-      acc[curr.date] = {
-        date: curr.date,
-        total: curr.percentage,
-        count: 1,
-      };
-    } else {
-      acc[curr.date].total += curr.percentage;
-      acc[curr.date].count += 1;
+    if (curr.percentage !== null) {
+      if (!acc[curr.date]) {
+        acc[curr.date] = {
+          date: curr.date,
+          total: curr.percentage,
+          count: 1,
+        };
+      } else {
+        acc[curr.date].total += curr.percentage;
+        acc[curr.date].count += 1;
+      }
     }
     return acc;
   }, {});
+  console.log("groupedProgress", groupedProgress);
 
   return Object.values(groupedProgress).map((item) => {
     return {
@@ -93,17 +95,18 @@ function convertMillisToMinutes(millis) {
   return Math.floor(minutes);
 }
 
-const createDatasets = (values, dataType) => {
-  const result = values.map((item) => {
-    return {
-      label: dataType.label,
-      data: item,
-      borderColor: "rgb(52, 178, 51)",
-      backgroundColor: "rgba(52, 178, 51, 0.5)",
+const createDatasets = (values) => {
+  const results = [];
+  for (let prop in values) {
+    results.push({
+      label: prop,
+      data: values[prop],
+      borderColor: rgbaString(colors[results.length], 1),
+      backgroundColor: rgbaString(colors[results.length], 0.5),
       spanGaps: true,
-    };
-  });
-  return result;
+    });
+  }
+  return results;
 };
 
 const dataTypes = {
@@ -127,33 +130,20 @@ const dataTypes = {
   },
 };
 
-// function groupByTaskId(arr) {
-//   const grouped = arr.reduce((acc, obj) => {
-//     acc[obj.taskId] = acc[obj.taskId] || [];
-//     acc[obj.taskId].push(obj);
-//     return acc;
-//   }, {});
+function groupByTaskId(dataArray, dates) {
+  return dataArray.reduce((grouped, item) => {
+    // If the group doesn't exist yet, create it
+    if (!grouped[item.name]) {
+      grouped[item.name] = [];
+    }
 
-//   // Return the grouped data as an array of arrays
-//   return Object.values(grouped);
-// }
+    // Push the current item into its group
+    grouped[item.name].push(item.percentage);
 
-function groupByTaskId(data) {
-  const result = data.reduce((acc, item) => {
-      const { taskId, percentage } = item;
-
-      if (!acc[taskId]) {
-          acc[taskId] = [];
-      }
-
-      acc[taskId].push(percentage);
-      return acc;
+    // Return the updated groups object
+    return grouped;
   }, {});
-
-  return Object.values(result);
 }
-
-
 
 ChartJS.register(
   CategoryScale,
@@ -167,8 +157,6 @@ ChartJS.register(
 
 export default function Chart() {
   const { progress, wastedTime, tasks } = useContext(ProductivityContext);
-  console.log("progress", groupByTaskId(progress));
-
   const [dataType, setDataType] = useState(dataTypes.dailyAverage);
   const [xAxisValues, setXAxisValues] = useState([]);
   const [yAxisValues, setYAxisValues] = useState([]);
@@ -181,7 +169,7 @@ export default function Chart() {
     });
 
     setXAxisValues(xAxis);
-    setYAxisValues([yAxis]);
+    setYAxisValues({ "Completed %": yAxis });
   };
 
   const plotWastedTime = (xAxis, yAxis) => {
@@ -190,13 +178,15 @@ export default function Chart() {
       yAxis.push(convertMillisToMinutes(item.time));
     });
     setXAxisValues(xAxis);
-    setYAxisValues([yAxis]);
+    setYAxisValues({ Minutes: yAxis });
   };
 
   const plotIndividualTask = (xAxis, yAxis) => {
     xAxis = getDatesFromArray(progress);
-    const groupedProgress = groupByTaskId(progress);
-
+    const groupedProgress = groupByTaskId(progress, xAxis);
+    console.log("groupedProgress", groupedProgress);
+    setXAxisValues(xAxis);
+    setYAxisValues(groupedProgress);
   };
 
   useEffect(() => {
@@ -206,6 +196,8 @@ export default function Chart() {
       ? plotTaskAverage(tempXAxisValues, tempYAxisValues)
       : dataType.type === "wastedTime"
       ? plotWastedTime(tempXAxisValues, tempYAxisValues)
+      : dataType.type === "individualTask"
+      ? plotIndividualTask(tempXAxisValues, tempYAxisValues)
       : console.log("not daily average");
   }, [progress, dataType]);
 
@@ -216,6 +208,11 @@ export default function Chart() {
 
   const options = {
     responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
     plugins: {
       legend: {
         position: "top",
@@ -267,7 +264,9 @@ export default function Chart() {
           </li>
         </ul>
       </div>
-      <Line options={options} data={data} />
+      <div className="w-75">
+        <Line options={options} data={data} />
+      </div>
     </>
   );
 }

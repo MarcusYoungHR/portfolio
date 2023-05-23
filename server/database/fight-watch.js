@@ -90,20 +90,25 @@ const tasks = {
 const progress = {
   id: idField,
   name: { allowNull: false, type: Sequelize.STRING },
-  remaining: {
-    allowNull: false,
-    type: Sequelize.INTEGER,
-  },
+  remaining: { type: Sequelize.INTEGER },
   date: { allowNull: false, type: Sequelize.DATEONLY },
-  goal: notNullIntField,
+  goal: { type: Sequelize.INTEGER },
   percentage: {
     type: Sequelize.VIRTUAL,
     get() {
       const goal = this.getDataValue("goal");
       const remaining = this.getDataValue("remaining");
+
+      // if both goal and remaining are null, return null
+      if (goal === null && remaining === null) {
+        return null;
+      }
+
+      // otherwise, calculate the percentage as before
       return goal === 0 ? 0 : 100 * ((goal - remaining) / goal);
     },
-  },
+},
+
   measurement: { allowNull: false, type: Sequelize.STRING },
   taskId: refField("Tasks", "id"),
 };
@@ -137,7 +142,9 @@ const findAllTasks = async () => {
 
 const findAllProgress = async () => {
   try {
-    const progress = await Progress.findAll();
+    const progress = await Progress.findAll({
+      order: [["date", "ASC"]],
+    });
     console.log("Progress:", progress);
     return progress;
   } catch (error) {
@@ -155,11 +162,11 @@ const findAllWastedTime = async () => {
   }
 };
 
-const upsertWastedTime = async (time) => {
+const upsertWastedTime = async (time, date) => {
   try {
     const wastedTime = await WastedTime.upsert({
+      date,
       time,
-      date: format(new Date(), "yyyy-MM-dd"),
     });
 
     console.log("Wasted time:", wastedTime);
@@ -184,22 +191,25 @@ const dailyWastedTimeEntry = async () => {
 };
 
 const findTasksByDay = async (dayOfWeek) => {
-  try {
-    const dailyTasks = await Tasks.findAll({
-      where: {
-        recurrence: {
-          [Sequelize.Op.and]: [
-            sequelize.literal(`JSON_CONTAINS(recurrence, '"${dayOfWeek}"')`),
-          ],
-        },
-      },
-    });
+  const tasks = await Tasks.findAll()
 
-    console.log(`Tasks with ${dayOfWeek} recurrence:`, dailyTasks);
-    return dailyTasks;
-  } catch (error) {
-    console.error("Error querying tasks:", error);
+  for (const task of tasks) {
+    if (hasCurrentDayKey(task)) {
+      console.log("Task has current day key");
+      await createProgressFromTask(task);
+    } else {
+      console.log("Task does not have current day key");
+      await createProgressFromTask({
+        name: task.name,
+        remaining: null,
+        date: format(new Date(), "yyyy-MM-dd"),
+        taskId: task.id,
+        goal: null,
+        measurement: task.measurement,
+      })
+    }
   }
+
 };
 
 const createProgressFromTask = async (task) => {
@@ -298,6 +308,9 @@ const removeFighter = (id) => {
 const updateFighter = async (fighter) => {
   return Fighters.upsert(fighter);
 };
+
+
+
 
 module.exports = {
   insertFighter,

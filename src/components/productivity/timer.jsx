@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { ProductivityContext } from "../../store/context/productivity-context";
 import { findCurrentProgress, getTodaysDate } from "../../utils/productivity";
+import TaskUpdateButton from "./task-update-button";
 
 const Timer = () => {
   const { taskId } = useParams();
@@ -70,9 +71,18 @@ const Timer = () => {
   };
 
   return (
-    <div>
-      <h1>{formatTime(remaining)}</h1>
-      <button onClick={handleStartStop}>{isRunning ? "Stop" : "Start"}</button>
+    <div className="row align-items-center">
+      <div className="col-auto">
+        <h1 className="text-light">{formatTime(remaining)}</h1>
+      </div>
+      <div className="col-auto pe-0">
+        <button className="btn btn-success fs-3 py-0 rounded-start border-right-radius-none" onClick={handleStartStop}>
+          {isRunning ? "Stop" : "Start"}
+        </button>
+      </div>
+      <div className="col-auto ps-0">
+        <TaskUpdateButton currentProgress={currentProgress} styles={'border-left-radius-none'}/>
+      </div>
     </div>
   );
 };

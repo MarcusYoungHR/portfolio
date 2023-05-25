@@ -35,7 +35,7 @@ export async function addTask(task) {
 }
 
 export async function loadProductivityData() {
-  return axios.get("/productivity").then((data) => {
+  return axios.get("/load-productivity").then((data) => {
     return data;
   });
 }

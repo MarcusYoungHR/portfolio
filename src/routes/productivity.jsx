@@ -58,13 +58,13 @@ export default function Productivity() {
               <Link className="navbar-brand productivity-nav-link" to="/">
                 Home
               </Link>
-              <Link className="navbar-brand productivity-nav-link" to="/productivity/chart">
+              <Link className="navbar-brand productivity-nav-link" to="/productivity">
                 Chart
               </Link>
               <Link className="navbar-brand productivity-nav-link" to="/productivity/wasted-time">
                 Wasted Time
               </Link>
-              <Link className="navbar-brand productivity-nav-link" to="/productivity">
+              <Link className="navbar-brand productivity-nav-link" to="/productivity/tasks">
                 Tasks
               </Link>
               <button

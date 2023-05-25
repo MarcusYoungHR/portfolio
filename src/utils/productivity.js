@@ -14,3 +14,9 @@ export function findCurrentWastedTime(date, context) {
 export const getTodaysDate = () => {
   return format(new Date(), "yyyy-MM-dd");
 }
+
+export function getCurrentDay() {
+  const today = new Date();
+  const dayOfWeek = format(today, 'EEEE');
+  return dayOfWeek;
+}

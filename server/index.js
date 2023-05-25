@@ -91,7 +91,7 @@ app.get("/manual-update", (req, res) => {
 
 //productivity routes
 
-app.get("/productivity", (req, res) => {
+app.get("/load-productivity", (req, res) => {
   const results = {};
   findAllTasks()
     .then((tasks) => {

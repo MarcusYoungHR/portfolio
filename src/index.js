@@ -89,17 +89,30 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <Chart />,
+      },
+
+      {
+        path: "tasks",
         element: <Tasks />,
         action: tasksAction,
-      },
-      {
-        path: "progress/:taskId",
-        element: <Progress />,
-        action: ProgressAction,
-      },
-      {
-        path: "chart",
-        element: <Chart />,
+        children: [
+          {
+            index: true,
+            element: (
+              <>
+                <div className="col">
+                  <h1 className="text-light">Select A Task</h1>
+                </div>
+              </>
+            ),
+          },
+          {
+            path: "progress/:taskId",
+            element: <Progress />,
+            action: ProgressAction,
+          },
+        ],
       },
       {
         path: "wasted-time",

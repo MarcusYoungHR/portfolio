@@ -1,0 +1,12 @@
+// Import Bootstrap functions and variables
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+
+// Override the warning color
+$theme-colors: map-merge($theme-colors, (
+  "primary": #1A5653,
+  "success": #202A44
+));
+
+// Now import the rest of Bootstrap
+@import "node_modules/bootstrap/scss/bootstrap";

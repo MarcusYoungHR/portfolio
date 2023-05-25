@@ -30,7 +30,7 @@ function getCurrentTime() {
 
 console.log("Current time:", getCurrentTime());
 
-// connectToDatabase();
+connectToDatabase();
 
 const fighters = {
   id: {

@@ -101,9 +101,10 @@ const createDatasets = (values) => {
     results.push({
       label: prop,
       data: values[prop],
-      borderColor: rgbaString(colors[results.length], 1),
-      backgroundColor: rgbaString(colors[results.length], 0.5),
+      borderColor: rgbaString(colors[results.length], 0.7),
+      backgroundColor: rgbaString(colors[results.length], 0.2),
       spanGaps: true,
+      pointRadius: 6
     });
   }
   return results;
@@ -157,7 +158,7 @@ ChartJS.register(
 
 export default function Chart() {
   const { progress, wastedTime, tasks } = useContext(ProductivityContext);
-  const [dataType, setDataType] = useState(dataTypes.dailyAverage);
+  const [dataType, setDataType] = useState(dataTypes.individualTask);
   const [xAxisValues, setXAxisValues] = useState([]);
   const [yAxisValues, setYAxisValues] = useState([]);
 
@@ -226,46 +227,55 @@ export default function Chart() {
 
   return (
     <>
-      <label htmlFor="dataTypeDropdown">Data Type</label>
-      <div className="dropdown">
-        <button
-          className="btn btn-secondary dropdown-toggle"
-          id="dataTypeDropdown"
-          type="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          {dataType.name}
-        </button>
-        <ul className="dropdown-menu">
-          <li>
-            <button
-              className="dropdown-item"
-              onClick={() => setDataType(dataTypes.dailyAverage)}
-            >
-              Task Average
-            </button>
-          </li>
-          <li>
-            <button
-              className="dropdown-item"
-              onClick={() => setDataType(dataTypes.individualTask)}
-            >
-              Individual Task
-            </button>
-          </li>
-          <li>
-            <button
-              className="dropdown-item"
-              onClick={() => setDataType(dataTypes.wastedTime)}
-            >
-              Wasted Time
-            </button>
-          </li>
-        </ul>
+      <div className="row mb-2 mt-2">
+        <div className="col">
+          <div className="w-75 mx-auto">
+            <div className="dropdown">
+              <button
+                className="btn btn-primary dropdown-toggle fw-semibold"
+                id="dataTypeDropdown"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {dataType.name}
+              </button>
+              <ul className="dropdown-menu">
+                <li>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => setDataType(dataTypes.dailyAverage)}
+                  >
+                    Task Average
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => setDataType(dataTypes.individualTask)}
+                  >
+                    Individual Task
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => setDataType(dataTypes.wastedTime)}
+                  >
+                    Wasted Time
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="w-75">
-        <Line options={options} data={data} />
+      <div className="row">
+        <div className="col">
+          <div className="w-75 p-2 mx-auto bg-white rounded-4">
+            <Line options={options} data={data} />
+          </div>
+        </div>
       </div>
     </>
   );

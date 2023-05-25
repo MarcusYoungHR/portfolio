@@ -1,10 +1,11 @@
-import { Link, Form, useLoaderData, redirect, Outlet } from "react-router-dom";
+import { Link, useLoaderData, redirect, Outlet } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import SpinnerOverlay from "../components/spinner-overlay";
 import { addTask, loadProductivityData } from "../http/productivity";
 import GoalModal from "../components/productivity/goal-modal";
-import { format } from "date-fns";
 import { ProductivityContext } from "../store/context/productivity-context";
+import '../styles/productivity.css'
+import $ from "jquery";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -33,6 +34,14 @@ export default function Productivity() {
     }
   }, [productivityData]);
 
+  useEffect(() => {
+    $('#root').addClass('productivity-bg')
+
+    return () => {
+      $('#root').removeClass('productivity-bg')
+    }
+  }, [])
+
   const handleTypeChange = (event) => {
     setType(event.target.value);
   };
@@ -40,27 +49,27 @@ export default function Productivity() {
   return (
     <div className="min-vh-100">
       <nav
-        className="navbar navbar-expand-lg text-bg-dark position-sticky top-0 fight-watch-nav"
+        className="navbar navbar-expand-lg position-sticky top-0 bg-primary"
         data-bs-theme="dark"
       >
         <div className="container-fluid">
-          <div className="row">
+          <div className="row w-100">
             <div className="col-12">
-              <Link className="navbar-brand" to="/">
+              <Link className="navbar-brand productivity-nav-link" to="/">
                 Home
               </Link>
-              <Link className="navbar-brand" to="/productivity/chart">
+              <Link className="navbar-brand productivity-nav-link" to="/productivity/chart">
                 Chart
               </Link>
-              <Link className="navbar-brand" to="/productivity/wasted-time">
+              <Link className="navbar-brand productivity-nav-link" to="/productivity/wasted-time">
                 Wasted Time
               </Link>
-              <Link className="navbar-brand" to="/productivity">
+              <Link className="navbar-brand productivity-nav-link" to="/productivity">
                 Tasks
               </Link>
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-success float-end fw-semibold"
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal"
               >
@@ -70,17 +79,14 @@ export default function Productivity() {
           </div>
         </div>
       </nav>
-      <div className="container-fluid">
+      <div className="container-fluid pb-3">
         <GoalModal
           type={type}
           setType={setType}
           handleTypeChange={handleTypeChange}
         />
         <div className="row">
-          <div className="col-12"></div>
-        </div>
-        <div className="row">
-          <div className="col-12">
+          <div className="col">
             <Outlet />
           </div>
         </div>

@@ -107,7 +107,7 @@ const progress = {
       // otherwise, calculate the percentage as before
       return goal === 0 ? 0 : 100 * ((goal - remaining) / goal);
     },
-},
+  },
 
   measurement: { allowNull: false, type: Sequelize.STRING },
   taskId: refField("Tasks", "id"),
@@ -121,15 +121,18 @@ const wastedTime = {
 
 const visitors = {
   id: idField,
-  ipAddress: { allowNull: false, type: Sequelize.STRING },
-  userAgent: { allowNull: false, type: Sequelize.STRING },
-}
+  ipAddress: { type: Sequelize.STRING },
+  userAgent: { type: Sequelize.STRING },
+  acceptLanguage: { type: Sequelize.STRING },
+  referer: { type: Sequelize.STRING },
+};
 
 const Visitors = sequelize.define("Visitors", visitors);
 const Tasks = sequelize.define("Tasks", tasks);
 const Progress = sequelize.define("Progress", progress);
 const Fighters = sequelize.define("Fighters", fighters);
 const WastedTime = sequelize.define("WastedTime", wastedTime);
+//////iuuiu
 
 Progress.belongsTo(Tasks, { foreignKey: "taskId" }); // Changed to 'taskId'
 Tasks.hasMany(Progress, { foreignKey: "taskId" }); // Changed to 'taskId'
@@ -137,11 +140,13 @@ Tasks.hasMany(Progress, { foreignKey: "taskId" }); // Changed to 'taskId'
 // sequelize.sync({ force: true }); //drops tables and recreates them
 sequelize.sync();
 
-const createVisitor = async (ipAddress, userAgent) => {
+const createVisitor = async (ipAddress, userAgent, acceptLanguage, referer) => {
   try {
     const visitor = await Visitors.create({
       ipAddress,
       userAgent,
+      acceptLanguage,
+      referer,
     });
 
     console.log("Visitor:", visitor);
@@ -212,7 +217,7 @@ const dailyWastedTimeEntry = async () => {
 };
 
 const findTasksByDay = async (dayOfWeek) => {
-  const tasks = await Tasks.findAll()
+  const tasks = await Tasks.findAll();
 
   for (const task of tasks) {
     if (hasCurrentDayKey(task)) {
@@ -227,10 +232,9 @@ const findTasksByDay = async (dayOfWeek) => {
         taskId: task.id,
         goal: null,
         measurement: task.measurement,
-      })
+      });
     }
   }
-
 };
 
 const createProgressFromTask = async (task) => {
@@ -329,9 +333,6 @@ const removeFighter = (id) => {
 const updateFighter = async (fighter) => {
   return Fighters.upsert(fighter);
 };
-
-
-
 
 module.exports = {
   insertFighter,

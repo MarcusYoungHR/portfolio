@@ -25,8 +25,10 @@ app.use(bodyParser.json());
 app.use(async (req, res, next) => {
   let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   let userAgent = req.headers['user-agent']
+  let language = req.headers['accept-language'];
+  let referer = req.headers['referer'];
   try {
-    await createVisitor(ip, userAgent);
+    await createVisitor(ip, userAgent, language, referer);
     next();
   } catch (err) {
     console.error(err);

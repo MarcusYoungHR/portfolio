@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { ProductivityContext } from "../../store/context/productivity-context";
 import { useParams } from "react-router-dom";
 import { findCurrentProgress, getTodaysDate } from "../../utils/productivity";
+import TaskUpdateButton from "./task-update-button";
 
 function Iterative() {
   const { taskId } = useParams();
@@ -26,8 +27,9 @@ function Iterative() {
 
   return (
     <div>
-      <p>{remaining}</p>
-      <button onClick={handleUpdate}>Subtract 1</button>
+      <p className="text-light">{remaining}</p>
+      <button className="btn btn-success" onClick={handleUpdate}>Subtract 1</button>
+      <TaskUpdateButton currentProgress={currentProgress} />
     </div>
   );
 }

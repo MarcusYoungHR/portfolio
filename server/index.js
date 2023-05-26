@@ -11,6 +11,7 @@ const {
   findAllTasks,
   findAllProgress,
   findAllWastedTime,
+  createVisitor
 } = require("./database/fight-watch");
 const {
   updateFightDatesInterval,
@@ -20,6 +21,19 @@ const path = require("path");
 
 const app = express();
 app.use(bodyParser.json());
+app.use(async (req, res, next) => {
+  let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  console.log('connection from:', ip);
+  try {
+    await createVisitor(ip);
+    next();
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+
 const port = 4000;
 
 app.use(express.static(path.join(__dirname, "../build")));

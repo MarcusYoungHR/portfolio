@@ -119,6 +119,12 @@ const wastedTime = {
   date: { allowNull: false, type: Sequelize.DATEONLY, unique: true },
 };
 
+const visitors = {
+  id: idField,
+  ipAddress: { allowNull: false, type: Sequelize.STRING },
+}
+
+const Visitors = sequelize.define("Visitors", visitors);
 const Tasks = sequelize.define("Tasks", tasks);
 const Progress = sequelize.define("Progress", progress);
 const Fighters = sequelize.define("Fighters", fighters);
@@ -129,6 +135,19 @@ Tasks.hasMany(Progress, { foreignKey: "taskId" }); // Changed to 'taskId'
 
 // sequelize.sync({ force: true }); //drops tables and recreates them
 sequelize.sync();
+
+const createVisitor = async (ipAddress) => {
+  try {
+    const visitor = await Visitors.create({
+      ipAddress,
+    });
+
+    console.log("Visitor:", visitor);
+    return visitor;
+  } catch (error) {
+    console.error("Error creating visitor:", error);
+  }
+};
 
 const findAllTasks = async () => {
   try {
@@ -323,4 +342,5 @@ module.exports = {
   findAllWastedTime,
   findAllProgress,
   findAllTasks,
+  createVisitor,
 };

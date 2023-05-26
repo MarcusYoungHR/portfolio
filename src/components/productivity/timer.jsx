@@ -4,21 +4,13 @@ import { ProductivityContext } from "../../store/context/productivity-context";
 import { findCurrentProgress, getTodaysDate } from "../../utils/productivity";
 import TaskUpdateButton from "./task-update-button";
 
-const Timer = () => {
+const Timer = ({ isCurrent }) => {
   const { taskId } = useParams();
   const { progress, updateProgress } = useContext(ProductivityContext);
   const [isRunning, setIsRunning] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
-  const [alarmAudio] = useState(
-    new Audio(`${process.env.PUBLIC_URL}/sounds/alarm.wav`)
-  ); // Update here
   const startTimeRef = useRef(null);
-
-  const today = getTodaysDate();
-  const idNumber = Number(taskId);
-
-  const currentProgress = findCurrentProgress(idNumber, today, progress);
-  const { remaining, id } = currentProgress;
+  const [currentProgress, setCurrentProgress] = useState(null);
 
   const updateRemaining = (id, remaining) => {
     updateProgress((prevProgress) =>
@@ -31,18 +23,35 @@ const Timer = () => {
   const handleUpdate = () => {
     const currentTime = performance.now();
     const newRemaining = Math.max(startTimeRef.current - currentTime, 0);
-    updateRemaining(id, newRemaining);
+    updateRemaining(currentProgress.id, newRemaining);
 
     if (newRemaining <= 0) {
       setIsRunning(false);
       clearInterval(intervalId);
-      alarmAudio.play();
     }
   };
 
   useEffect(() => {
+    if (!isCurrent) {
+      const filteredProgress = progress.filter(
+        (item) => item.taskId === Number(taskId)
+      );
+      for (let i = filteredProgress.length - 2; i >= 0; i--) {
+        if (filteredProgress[i].percentage < 100) {
+          setCurrentProgress(filteredProgress[i]);
+          return
+        }
+      }
+    }
+
+    const today = getTodaysDate();
+    const idNumber = Number(taskId);
+    setCurrentProgress(findCurrentProgress(idNumber, today, progress));
+  }, [taskId, progress, isCurrent]);
+
+  useEffect(() => {
     if (isRunning) {
-      startTimeRef.current = performance.now() + remaining;
+      startTimeRef.current = performance.now() + currentProgress.remaining;
       const id = setInterval(() => {
         requestAnimationFrame(handleUpdate);
       }, 1000);
@@ -54,7 +63,11 @@ const Timer = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [isRunning]);
+  }, [isRunning, currentProgress]);
+
+  useEffect(() => {
+    console.log(currentProgress);
+  }, [currentProgress]);
 
   const formatTime = (time) => {
     const seconds = Math.floor(time / 1000) % 60;
@@ -70,18 +83,30 @@ const Timer = () => {
     setIsRunning(!isRunning);
   };
 
+  if (!currentProgress) {
+    return null; // Or render some kind of placeholder or loading state
+  }
+
+  const { remaining, id } = currentProgress;
+
   return (
     <div className="row align-items-center">
       <div className="col-auto">
         <h1 className="text-light">{formatTime(remaining)}</h1>
       </div>
       <div className="col-auto pe-0">
-        <button className="btn btn-success fs-3 py-0 rounded-start border-right-radius-none" onClick={handleStartStop}>
+        <button
+          className="btn btn-success fs-3 py-0 rounded-start border-right-radius-none"
+          onClick={handleStartStop}
+        >
           {isRunning ? "Stop" : "Start"}
         </button>
       </div>
       <div className="col-auto ps-0">
-        <TaskUpdateButton currentProgress={currentProgress} styles={'border-left-radius-none'}/>
+        <TaskUpdateButton
+          currentProgress={currentProgress}
+          styles={"border-left-radius-none"}
+        />
       </div>
     </div>
   );

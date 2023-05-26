@@ -20,9 +20,10 @@ const {
 const path = require("path");
 
 const app = express();
+app.set('trust proxy', true);
 app.use(bodyParser.json());
 app.use(async (req, res, next) => {
-  let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   console.log('connection from:', ip);
   try {
     await createVisitor(ip);

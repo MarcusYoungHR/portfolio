@@ -37,9 +37,6 @@
   background-color: rgb(37, 37, 41);
 }
 
-::-webkit-scrollbar-track {
-  background-color: rgb(136, 8, 8);
-}
 
 .fighter-container {
   overflow-y: scroll;

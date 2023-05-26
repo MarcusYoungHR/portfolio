@@ -19,10 +19,6 @@
   scrollbar-width: none;  /* Firefox */
 }
 
-#root::-webkit-scrollbar {
-  display: none;
-}
-
 
 @keyframes gradient {
   0% {
@@ -51,27 +47,6 @@
   display: inline-block;
 }
 
-.grid-column {
-  display: grid;
-  grid-template-rows: 0px 100%
-}
-
-.h-max-content {
-  height: max-content;
-}
-
-.card {
-  width: 15rem;
-}
-
-
-.card-body {
-  position: relative
-}
-
-.card-link {
-  text-decoration: none;
-}
 
 .bg-navy {
   background-color: rgb(0, 0, 102);
@@ -84,6 +59,6 @@
   object-position: right top;
 }
 
-.overflow-hidden {
-  overflow: hidden;
+::-webkit-scrollbar-track {
+  background: transparent; /* Make it transparent */
 }

@@ -25,6 +25,8 @@
     "react-router": "^6.8.1",
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
+    "react-scroll": "^1.8.9",
+    "react-scrollspy": "^3.4.3",
     "s3proxy": "^1.6.5",
     "sass": "^1.62.1",
     "web-vitals": "^2.1.4"

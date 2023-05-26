@@ -30,6 +30,7 @@ import Progress, { action as ProgressAction } from "./routes/progress";
 import Chart from "./routes/chart";
 import WastedTime, { action as wastedTimeAction } from "./routes/wasted-time";
 import Tasks, { action as tasksAction } from "./routes/tasks";
+import Test from "./routes/test";
 
 import FightWatchContextProvider from "./store/context/fight-watch-context";
 import ProductivityContextProvider from "./store/context/productivity-context";
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
         element: <Skills />,
       },
     ],
+  },
+  {
+    path: "/test",
+    element: <Test />,
   },
   {
     path: "/fight-watch",

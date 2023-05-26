@@ -66,19 +66,10 @@ export async function loader() {
 
 export default function FightWatch() {
   const [loading, setLoading] = useState(false);
-  const [contentHeight, setContentHeight] = useState(0);
   const { initialLoad, updateInitialLoad } = useContext(FightWatchContext);
   const navigation = useNavigation();
   const fighters = useLoaderData();
   const navbarRef = useRef();
-
-  function updateContentHeight() {
-    const navbarHeight = $(navbarRef.current).outerHeight();
-    const windowHeight = $(window).height();
-    const contentMaxHeight = windowHeight - navbarHeight;
-
-    setContentHeight(contentMaxHeight);
-  }
 
   useEffect(() => {
     if (navigation.state !== "idle") {
@@ -111,15 +102,10 @@ export default function FightWatch() {
     $("#root").addClass("fight-watch-bg");
     $("body").addClass("overflow-hidden");
     updateInitialLoad(true);
-    if (navbarRef.current) {
-      updateContentHeight();
-    }
-    window.addEventListener("resize", updateContentHeight);
 
     return () => {
       $("body").removeClass("overflow-hidden");
       $("#root").removeClass("fight-watch-bg");
-      window.removeEventListener("resize", updateContentHeight);
     };
   }, []);
 
@@ -182,10 +168,7 @@ export default function FightWatch() {
             </div>
           </div>
         </nav>
-        <div
-          className="container-fluid fighter-container"
-          style={{ maxHeight: contentHeight }}
-        >
+        <div className="container-fluid fighter-container">
           {fighters ? (
             <CardGrid fighters={fighters} />
           ) : (

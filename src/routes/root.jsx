@@ -1,45 +1,34 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
-import Projects from "../components/projects";
+import { Outlet, useLocation } from "react-router-dom";
 import $ from "jquery";
 import { useEffect, useRef, useState } from "react";
+import Bio from "../components/portfolio/bio";
+import Skills from "../components/portfolio/skills";
+import Projects from "../components/portfolio/projects";
+import { Link, Element } from "react-scroll";
 
 export default function Root() {
-  const [contentHeight, setContentHeight] = useState(0);
-
   const navbarRef = useRef(null);
-
-  function updateContentHeight() {
-    const navbarHeight = $(navbarRef.current).outerHeight();
-    const windowHeight = $(window).height();
-    const contentMaxHeight = windowHeight - navbarHeight;
-
-    setContentHeight(contentMaxHeight);
-  }
 
   useEffect(() => {
     $("#root").removeClass();
     $("#root").addClass("portfolio-bg");
 
-    if (navbarRef.current) {
-      updateContentHeight();
-    }
-    window.addEventListener("resize", updateContentHeight);
-
+    // Optional: To clean up the listeners upon unmounting 
     return () => {
-      window.removeEventListener("resize", updateContentHeight);
+      // Events.scrollEvent.remove('begin');
+      // Events.scrollEvent.remove('end');
     };
   }, []);
 
   let location = useLocation();
   location = location.pathname;
 
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
   return (
     <div className="min-vh-100 d-flex flex-column">
-      <nav className="navbar navbar-expand-lg text-bg-dark" ref={navbarRef}>
+      <nav
+        className="navbar navbar-expand-lg text-bg-dark fixed-top"
+        ref={navbarRef}
+      >
         <div className="container-fluid">
           <svg width="50" height="50">
             <polygon
@@ -73,60 +62,34 @@ export default function Root() {
           <div className="collapse navbar-collapse float-right" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <Link className="nav-link text-white" to={"/"}>
-                  Projects
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to={"bio"}>
+                <Link activeClass="active" to="bio" spy={true} smooth={true} offset={-70} duration={500} className="nav-link text-light">
                   Bio
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link text-white" to={"skills"}>
+                <Link activeClass="active" to="projects" spy={true} smooth={true} offset={-70} duration={500} className="nav-link text-light">
+                  Projects
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link activeClass="active" to="skills" spy={true} smooth={true} offset={-70} duration={500} className="nav-link text-light">
                   Skills
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to={"resume"}>
-                  Resume
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to={"contact"}>
-                  Contact
                 </Link>
               </li>
             </ul>
           </div>
         </div>
       </nav>
-      <div className="container d-flex flex-column flex-grow-1" style={{maxHeight: contentHeight}}>
-        <div className="row flex-grow-1">
-          <div className="col-md-6 grid-column justify-content-center">
-            <h1 className="text-center">
-              Marcus Young<br></br>Full Stack Software Engineer
-            </h1>
-            <div className="octagon mx-auto align-self-center"></div>
-          </div>
-          {location === "/" ? (
-            <div className="col-md-6 grid-column justify-content-center">
-              <h1 className="text-center">Projects</h1>
-              <div className="h-max-content align-self-center py-5">
-                <Projects />
-              </div>
-            </div>
-          ) : (
-            <div className="col-md-6 grid-column justify-content-center">
-              <h1 className="text-center">
-                {capitalizeFirstLetter(location.slice(1))}
-              </h1>
-              <div className="h-max-content align-self-center pt-5">
-                <Outlet />
-              </div>
-            </div>
-          )}
-        </div>
+      <div className="container d-flex flex-column flex-grow-1">
+        <Element name="bio" className="element">
+          <Bio />
+        </Element>
+        <Element name="projects" className="element">
+          <Projects />
+        </Element>
+        <Element name="skills" className="element">
+          <Skills />
+        </Element>
       </div>
     </div>
   );

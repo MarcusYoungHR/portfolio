@@ -24,9 +24,9 @@ app.set('trust proxy', true);
 app.use(bodyParser.json());
 app.use(async (req, res, next) => {
   let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log('connection from:', ip);
+  let userAgent = req.headers['user-agent']
   try {
-    await createVisitor(ip);
+    await createVisitor(ip, userAgent);
     next();
   } catch (err) {
     console.error(err);

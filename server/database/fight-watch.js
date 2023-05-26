@@ -122,6 +122,7 @@ const wastedTime = {
 const visitors = {
   id: idField,
   ipAddress: { allowNull: false, type: Sequelize.STRING },
+  userAgent: { allowNull: false, type: Sequelize.STRING },
 }
 
 const Visitors = sequelize.define("Visitors", visitors);
@@ -136,10 +137,11 @@ Tasks.hasMany(Progress, { foreignKey: "taskId" }); // Changed to 'taskId'
 // sequelize.sync({ force: true }); //drops tables and recreates them
 sequelize.sync();
 
-const createVisitor = async (ipAddress) => {
+const createVisitor = async (ipAddress, userAgent) => {
   try {
     const visitor = await Visitors.create({
       ipAddress,
+      userAgent,
     });
 
     console.log("Visitor:", visitor);

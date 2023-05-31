@@ -14,7 +14,7 @@ const projectData = [
     },
   },
   {
-    title: "MMA Watch",
+    title: "MMA Upcoming Bouts",
     description:
       "Leveraging the Google API, a single comprehensive MMA database website is indexed to accurately " +
       "fetch pertinent links. These links are subsequently loaded and meticulously examined using Cheerio.JS, ensuring " +

@@ -100,12 +100,12 @@ export default function FightWatch() {
   useEffect(() => {
     $("#root").removeClass();
     $("#root").addClass("fight-watch-bg");
-    $("body").addClass("overflow-hidden");
+    $('body').addClass('scrollbar-fight-watch')
     updateInitialLoad(true);
 
     return () => {
-      $("body").removeClass("overflow-hidden");
       $("#root").removeClass("fight-watch-bg");
+      $('body').removeClass('scrollbar-fight-watch')
     };
   }, []);
 

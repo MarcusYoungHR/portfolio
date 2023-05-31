@@ -8,5 +8,12 @@ $theme-colors: map-merge($theme-colors, (
   "success": #202A44
 ));
 
+$spacers: map-merge(
+  $spacers,
+  (
+    7: 5rem, // This represents 56px if your base font-size is 16px
+  )
+);
+
 // Now import the rest of Bootstrap
 @import "node_modules/bootstrap/scss/bootstrap";

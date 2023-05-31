@@ -15,8 +15,6 @@
   animation: gradient 10s ease infinite;
   height: 100vh;
   overflow-y: scroll;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
 }
 
 
@@ -34,10 +32,6 @@
   }
 }
 
-.nav-link:hover {
-  opacity: 0.5;
-}
-
 .clickable-elem:hover {
   cursor: pointer;
   opacity: 0.5;
@@ -47,6 +41,10 @@
   display: inline-block;
 }
 
+.nav-link:hover {
+  cursor: pointer;
+  
+}
 
 .bg-navy {
   background-color: rgb(0, 0, 102);
@@ -59,6 +57,30 @@
   object-position: right top;
 }
 
+.opacity-hover {
+  opacity: 1;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.opacity-hover:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+
 ::-webkit-scrollbar-track {
-  background: transparent; /* Make it transparent */
+  background-color: transparent
+}
+
+/* Define a CSS class for each route's scrollbar color */
+.scrollbar-portfolio::-webkit-scrollbar-thumb {
+  background-color: rgb(37, 37, 41); /* Change this to your preferred color */
+}
+
+.scrollbar-fight-watch::-webkit-scrollbar-thumb {
+  background-color: rgb(37, 37, 41); /* Change this to your preferred color */
+}
+
+.scrollbar-productivity::-webkit-scrollbar-thumb {
+  background-color: #1A5653; /* Change this to your preferred color */
 }

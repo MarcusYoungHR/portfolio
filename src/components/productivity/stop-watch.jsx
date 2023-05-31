@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { ProductivityContext } from "../../store/context/productivity-context";
 import { findCurrentWastedTime, getTodaysDate } from "../../utils/productivity";
+import { Form } from "react-router-dom";
 
 const Stopwatch = () => {
   const [isRunning, setIsRunning] = useState(false);
@@ -60,9 +61,24 @@ const Stopwatch = () => {
   };
 
   return (
-    <div>
-      <h1>{getTime(time)}</h1>
-      <button onClick={toggleRunning}>{isRunning ? "Stop" : "Start"}</button>
+    <div className="row align-items-center">
+      <div className="col">
+        <h1 className="text-light">{getTime(time)}</h1>
+      </div>
+      <div className="col-auto pe-0">
+        <button className="btn btn-success border-right-radius-none" onClick={toggleRunning}>
+          {isRunning ? "Stop" : "Start"}
+        </button>
+      </div>
+      <div className="col-auto ps-0 ">
+          <Form method="post">
+            <input type="hidden" name="time" value={currentWastedTime.time} />
+            <input type="hidden" name="date" value={currentWastedTime.date} />
+            <button type="submit" name="intent" value="wasted time" className="btn btn-success border-left-radius-none">
+              Update
+            </button>
+          </Form>
+        </div>
     </div>
   );
 };

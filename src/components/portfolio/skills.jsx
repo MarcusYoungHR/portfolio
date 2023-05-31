@@ -63,19 +63,45 @@ export default function Skills() {
           <div className="col-auto mx-auto">
             <div className="row">
               <div className="col-auto">
-                <i className="bi bi-telephone-fill"></i>
+                <a
+                  href="tel:+19713810572"
+                  className="col text-light text-decoration-none "
+                >
+                  <i className="bi bi-telephone-fill opacity-hover"></i>
+                </a>
               </div>
-              <div className="col">(971) 381-0572</div>
+              <a
+                href="tel:+19713810572"
+                className="col text-light text-decoration-none opacity-hover"
+              >
+                (971) 381-0572
+              </a>
             </div>
           </div>
           <div className="col-auto mx-auto">
-            <i className="bi bi-github"></i>
+            <a
+              href="https://github.com/MarcusYoungHR"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-light"
+            >
+              <i className="bi bi-github opacity-hover"></i>
+            </a>
           </div>
           <div className="col-auto mx-auto">
-            <i className="bi bi-envelope-paper"></i>
+            <a href="mailto:marcusyoung0603@gmail.com" className="link-light">
+              <i className="bi bi-envelope-paper opacity-hover"></i>
+            </a>
           </div>
           <div className="col-auto mx-auto">
-            <i className="bi bi-linkedin"></i>
+            <a
+              href="https://www.linkedin.com/in/marcusyoung1994/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-light"
+            >
+              <i className="bi bi-linkedin opacity-hover"></i>
+            </a>
           </div>
         </div>
       </div>

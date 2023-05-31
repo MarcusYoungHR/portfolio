@@ -66,10 +66,6 @@ const Timer = ({ isCurrent }) => {
     };
   }, [isRunning, currentProgress]);
 
-  useEffect(() => {
-    console.log(currentProgress);
-  }, [currentProgress]);
-
   const formatTime = (time) => {
     const seconds = Math.floor(time / 1000) % 60;
     const minutes = Math.floor(time / 60000) % 60;

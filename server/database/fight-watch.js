@@ -159,7 +159,7 @@ const createVisitor = async (ipAddress, userAgent, acceptLanguage, referer) => {
 const findAllTasks = async () => {
   try {
     const tasks = await Tasks.findAll();
-    console.log("Tasks:", tasks);
+    // console.log("Tasks:", tasks);
     return tasks;
   } catch (error) {
     console.error("Error querying tasks:", error);
@@ -171,7 +171,7 @@ const findAllProgress = async () => {
     const progress = await Progress.findAll({
       order: [["date", "ASC"]],
     });
-    console.log("Progress:", progress);
+    // console.log("Progress:", progress);
     return progress;
   } catch (error) {
     console.error("Error querying progress:", error);
@@ -181,7 +181,7 @@ const findAllProgress = async () => {
 const findAllWastedTime = async () => {
   try {
     const wastedTime = await WastedTime.findAll();
-    console.log("Wasted time:", wastedTime);
+    // console.log("Wasted time:", wastedTime);
     return wastedTime;
   } catch (error) {
     console.error("Error querying wasted time:", error);

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Element } from "react-scroll";
 
-export default function Test() {
+export default function TestScroll() {
   return (
     <div className="TestScroll">
       <div style={{ display: "flex", justifyContent: "space-between" }}>

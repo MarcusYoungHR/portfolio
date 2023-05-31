@@ -1,17 +1,33 @@
 import { Link, useLoaderData, redirect, Outlet } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import SpinnerOverlay from "../components/spinner-overlay";
-import { addTask, loadProductivityData } from "../http/productivity";
+import {
+  addTask,
+  loadProductivityData,
+  updateWastedTime,
+} from "../http/productivity";
 import GoalModal from "../components/productivity/goal-modal";
+import Tasks from "../components/productivity/tasks";
+import Chart from "../components/productivity/chart";
+import Bio from "../components/portfolio/bio";
+import Projects from "../components/portfolio/projects";
+import Skills from "../components/portfolio/skills";
 import { ProductivityContext } from "../store/context/productivity-context";
-import '../styles/productivity.css'
+import "../styles/productivity.css";
 import $ from "jquery";
+import { Link as ScrollLink, Element } from "react-scroll";
 
 export async function action({ request }) {
   const formData = await request.formData();
+  const intent = formData.get("intent");
   const updates = Object.fromEntries(formData);
-  const task = await addTask(updates);
 
+  if (intent === "wasted time") {
+    const time = await updateWastedTime(updates);
+    return redirect("/productivity");
+  }
+
+  const task = await addTask(updates);
   return redirect(`/productivity`);
 }
 
@@ -22,7 +38,8 @@ export async function loader() {
 
 export default function Productivity() {
   const [type, setType] = useState(null);
-  const { updateTasks, updateProgress, updateWastedTime } = useContext(ProductivityContext);
+  const { updateTasks, updateProgress, updateWastedTime } =
+    useContext(ProductivityContext);
 
   const productivityData = useLoaderData();
 
@@ -34,63 +51,114 @@ export default function Productivity() {
     }
   }, [productivityData]);
 
-  useEffect(() => {
-    $('#root').addClass('productivity-bg')
-
-    return () => {
-      $('#root').removeClass('productivity-bg')
-    }
-  }, [])
 
   const handleTypeChange = (event) => {
     setType(event.target.value);
   };
 
   return (
-    <div className="min-vh-100">
-      <nav
-        className="navbar navbar-expand-lg position-sticky top-0 bg-primary"
-        data-bs-theme="dark"
-      >
+    <>
+      <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div className="container-fluid">
-          <div className="row w-100">
-            <div className="col-12">
-              <Link className="navbar-brand productivity-nav-link" to="/">
-                Home
-              </Link>
-              <Link className="navbar-brand productivity-nav-link" to="/productivity">
-                Chart
-              </Link>
-              <Link className="navbar-brand productivity-nav-link" to="/productivity/wasted-time">
-                Wasted Time
-              </Link>
-              <Link className="navbar-brand productivity-nav-link" to="/productivity/tasks">
-                Tasks
-              </Link>
-              <button
-                type="button"
-                className="btn btn-success float-end fw-semibold"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-              >
-                Add Task
-              </button>
-            </div>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav">
+              <li class="nav-item">
+                <Link
+                  to="/"
+                  spy={true}
+                  smooth={true}
+                  offset={-70}
+                  duration={500}
+                  className="text-light opacity-hover text-decoration-none fs-4 me-3"
+                  containerId="portfolio"
+                >
+                  <a>Home</a>
+                </Link>
+              </li>
+              <li class="nav-item">
+                <ScrollLink
+                  to="tasks"
+                  spy={true}
+                  smooth={true}
+                  offset={-70}
+                  duration={500}
+                  className="text-light opacity-hover text-decoration-none fs-4 me-3"
+                  containerId="productivity-container"
+                >
+                  <a>Tasks</a>
+                </ScrollLink>
+              </li>
+              <li class="nav-item">
+                <ScrollLink
+                  to="chart"
+                  spy={true}
+                  smooth={true}
+                  offset={-50}
+                  duration={500}
+                  className="text-light opacity-hover text-decoration-none fs-4 me-3"
+                  containerId="productivity-container"
+                >
+                  <a>Chart</a>
+                </ScrollLink>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  className="btn btn-success float-end text-center"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                >
+                  <i className="bi bi-plus-lg fs-5"></i>
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>
-      <div className="container-fluid pb-3">
-        <GoalModal
-          type={type}
-          setType={setType}
-          handleTypeChange={handleTypeChange}
-        />
+      <div
+        className="container-fluid productivity-bg scrollbar-productivity"
+        id="productivity-container"
+      >
         <div className="row">
+          <div className="col">
+            <div className="container">
+              <Element name="tasks">
+                <Tasks />
+              </Element>
+              <Element name="chart">
+                <Chart />
+              </Element>
+            </div>
+          </div>
+          <GoalModal
+            type={type}
+            setType={setType}
+            handleTypeChange={handleTypeChange}
+          />
+        </div>
+      </div>
+    </>
+  );
+}
+
+{
+  /*  */
+}
+{
+  /* <div className="row">
           <div className="col">
             <Outlet />
           </div>
-        </div>
-      </div>
-    </div>
-  );
+        </div> */
 }

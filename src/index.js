@@ -11,16 +11,12 @@ import "./styles/custom.scss";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-import Contact from "./routes/contact";
-import Skills from "./routes/skills";
 import { action as destroyAction } from "./routes/destroy";
 import Root from "./routes/root";
 import FightWatch, {
   action as fightWatchAction,
   loader as fightWatchLoader,
 } from "./routes/fight-watch";
-import Bio from "./routes/bio";
-import Resume from "./routes/resume";
 import CoverLetter from "./routes/cover-letter";
 import Productivity, {
   action as productivityAction,
@@ -39,24 +35,6 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    children: [
-      {
-        path: "/Bio",
-        element: <Bio />,
-      },
-      {
-        path: "/Resume",
-        element: <Resume />,
-      },
-      {
-        path: "/Contact",
-        element: <Contact />,
-      },
-      {
-        path: "/Skills",
-        element: <Skills />,
-      },
-    ],
   },
   {
     path: "/test",
@@ -94,30 +72,27 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: (
+          <>
+            <div className="col">
+              <h1 className="text-light">Please Select A Task</h1>
+            </div>
+          </>
+        ),
+      },
+      {
+        path: "/productivity/chart",
         element: <Chart />,
       },
-
+      {
+        path: "progress/:taskId",
+        element: <Progress />,
+        action: ProgressAction,
+      },
       {
         path: "tasks",
         element: <Tasks />,
         action: tasksAction,
-        children: [
-          {
-            index: true,
-            element: (
-              <>
-                <div className="col">
-                  <h1 className="text-light">Select A Task</h1>
-                </div>
-              </>
-            ),
-          },
-          {
-            path: "progress/:taskId",
-            element: <Progress />,
-            action: ProgressAction,
-          },
-        ],
       },
       {
         path: "wasted-time",

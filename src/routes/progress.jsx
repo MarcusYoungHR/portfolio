@@ -22,21 +22,60 @@ export default function Progress() {
   const [isCurrent, setIsCurrent] = useState(true);
   const today = getTodaysDate();
 
-  useEffect(() => {
-    setCurrentProgress(findCurrentProgress(idNumber, today, progress));
-  }, [idNumber, today, progress]);
+  // useEffect(() => {
+  //   setCurrentProgress(findCurrentProgress(idNumber, today, progress));
+  // }, [idNumber, today, progress]);
 
-  if (!currentProgress) {
-    return (
-      <div className="col-auto py-2">
-        <h3 className="text-light">Not Scheduled for Today</h3>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!isCurrent) {
+      const filteredProgress = progress.filter(
+        (item) => item.taskId === Number(taskId)
+      );
+      console.log("filteredProgress", filteredProgress);
+      for (let i = filteredProgress.length - 2; i >= 0; i--) {
+        if (
+          filteredProgress[i].percentage < 100 &&
+          filteredProgress[i].percentage !== null
+        ) {
+          setCurrentProgress(filteredProgress[i]);
+          return;
+        }
+      }
+    }
+
+    const today = getTodaysDate();
+    const idNumber = Number(taskId);
+    setCurrentProgress(findCurrentProgress(idNumber, today, progress));
+  }, [taskId, progress, isCurrent]);
 
   const handleChange = (event) => {
     setIsCurrent(event.target.value === "current");
   };
+
+  if (!currentProgress) {
+    return (
+      <>
+        <div className="col-auto py-2">
+          <h3 className="text-light">Not Scheduled for Today</h3>
+        </div>
+        <div className="col-auto py-2">
+          <input
+            type="radio"
+            className="btn-check"
+            name="options"
+            id="option1"
+            autoComplete="off"
+            value="previous"
+            onChange={handleChange}
+            checked={!isCurrent}
+          />
+          <label className="btn btn-success" htmlFor="option1">
+            Previous
+          </label>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -44,7 +83,11 @@ export default function Progress() {
         <h1 className="text-light">{currentProgress.name}:</h1>
       </div>
       <div className="col-auto py-2">
-        {currentProgress.measurement === "time" ? <Timer isCurrent={isCurrent}/> : <Iterative isCurrent={isCurrent}/>}
+        {currentProgress.measurement === "time" ? (
+          <Timer isCurrent={isCurrent} />
+        ) : (
+          <Iterative isCurrent={isCurrent} />
+        )}
       </div>
       <div className="col-auto py-2">
         <input

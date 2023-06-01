@@ -257,10 +257,6 @@ const dailyProgressEntry = async () => {
   const currentDay = getCurrentDayOfWeek();
   const tasks = await findTasksByDay(currentDay);
 
-  for (const task of tasks) {
-    await createProgressFromTask(task);
-  }
-
   console.log("Daily progress entry complete");
 };
 

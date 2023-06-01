@@ -1,5 +1,7 @@
 .fight-watch-bg {
-  background: rgb(136, 8, 8)
+  background: rgb(136, 8, 8);
+  height: 100vh;
+  overflow-y: scroll;
 }
 
 .fighter-image {

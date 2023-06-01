@@ -6,12 +6,21 @@ export default function Skills() {
           <div className="col">
             <div className="row text-bg-dark rounded py-2 my-2 mx-0">
               <div className="col">
-                <h3>Front End:</h3>
+                <h1 className="me-3">Front End:</h1>
               </div>
-              <div className="col">
-                <div>
-                  JavaScript, React, HTML, CSS, Vue, Angular, jQuery, Bootstrap,
-                  Material-UI, Redux
+              <div className="col d-flex">
+                <div className="icon-container font-size-3rem">
+                  <i className="devicon-javascript-plain mx-1 my-1"></i>
+                  <i className="devicon-react-original mx-1 my-1"></i>
+                  <i className="devicon-vuejs-plain mx-1 my-1"></i>
+                  <i className="devicon-angularjs-plain mx-1 my-1"></i>
+                  <i className="devicon-bootstrap-plain mx-1 my-1"></i>
+                  <i className="devicon-jquery-plain mx-1 my-1"></i>
+                  <i className="devicon-materialui-plain mx-1 my-1"></i>
+                  <i className="devicon-css3-plain mx-1 my-1"></i>
+                  <i className="devicon-html5-plain mx-1 my-1"></i>
+                  <i className="devicon-redux-original mx-1 my-1"></i>
+                  <i className="devicon-less-plain-wordmark mx-1 my-1"></i>
                 </div>
               </div>
             </div>
@@ -19,40 +28,57 @@ export default function Skills() {
           <div className="col">
             <div className="row text-bg-dark rounded py-2 my-2 mx-0">
               <div className="col">
-                <h3>Back End:</h3>
+                <h1>Back End:</h1>
               </div>
               <div className="col">
-                <div>Node, Python, Express, PHP, GraphQ, Mocha, Chai</div>
-              </div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="row text-bg-dark rounded py-2 my-2 mx-0">
-              <div className="col">
-                <h3>Database:</h3>
-              </div>
-              <div className="col">
-                <div>MySQL, MongoDB, Sequelize, Mongoose</div>
+                <div className="icon-container font-size-3rem">
+                  <i className="devicon-nodejs-plain mx-1 my-1"></i>
+                  <i className="devicon-python-plain mx-1 my-1"></i>
+                  <i className="devicon-express-original mx-1 my-1"></i>
+                  <i className="devicon-php-plain mx-1 my-1"></i>
+                  <i className="devicon-graphql-plain mx-1 my-1"></i>
+                  <i className="devicon-mocha-plain mx-1 my-1"></i>
+                  <i className="devicon-jest-plain mx-1 my-1"></i>
+                </div>
               </div>
             </div>
           </div>
           <div className="col">
             <div className="row text-bg-dark rounded py-2 my-2 mx-0">
               <div className="col">
-                <h3>Dev Ops:</h3>
+                <h1>Database:</h1>
               </div>
               <div className="col">
-                <div>AWS, EC2, S3, Nginx, Redis, Cloudfront, Route 53</div>
+                <div className="icon-container font-size-3rem">
+                  <i className="devicon-mysql-plain mx-1 my-1"></i>
+                  <i className="devicon-mongodb-plain mx-1 my-1"></i>
+                  <i className="devicon-sequelize-plain mx-1 my-1"></i>
+                  <i className="devicon-postgresql-plain mx-1 my-1"></i>
+                </div>
               </div>
             </div>
           </div>
           <div className="col">
             <div className="row text-bg-dark rounded py-2 my-2 mx-0">
               <div className="col">
-                <h3>Misc:</h3>
+                <h1>Dev Ops:</h1>
               </div>
               <div className="col">
-                <div>Project Management, Confluence, Jira, Trello</div>
+                <div className="icon-container font-size-3rem">
+                  <i className="devicon-amazonwebservices-original mx-1 my-1"></i>
+                  <i className="devicon-nginx-original mx-1 my-1"></i>
+                  <i className="devicon-redis-plain mx-1 my-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="row text-bg-dark rounded py-2 my-2 mx-0">
+              <div className="col">
+                <h1>Misc:</h1>
+              </div>
+              <div className="col fs-5">
+                Project Management, Jira, Trello, Confluence, Agile, Scrum
               </div>
             </div>
           </div>
@@ -67,7 +93,7 @@ export default function Skills() {
                   href="tel:+19713810572"
                   className="col text-light text-decoration-none "
                 >
-                  <i className="bi bi-telephone-fill opacity-hover"></i>
+                  <i className="bi bi-telephone-fill opacity-hover mx-1 my-1"></i>
                 </a>
               </div>
               <a
@@ -85,12 +111,12 @@ export default function Skills() {
               rel="noopener noreferrer"
               className="link-light"
             >
-              <i className="bi bi-github opacity-hover"></i>
+              <i className="bi bi-github opacity-hover mx-1 my-1"></i>
             </a>
           </div>
           <div className="col-auto mx-auto">
             <a href="mailto:marcusyoung0603@gmail.com" className="link-light">
-              <i className="bi bi-envelope-paper opacity-hover"></i>
+              <i className="bi bi-envelope-paper opacity-hover mx-1 my-1"></i>
             </a>
           </div>
           <div className="col-auto mx-auto">
@@ -100,7 +126,7 @@ export default function Skills() {
               rel="noopener noreferrer"
               className="link-light"
             >
-              <i className="bi bi-linkedin opacity-hover"></i>
+              <i className="bi bi-linkedin opacity-hover mx-1 my-1"></i>
             </a>
           </div>
         </div>
@@ -108,3 +134,6 @@ export default function Skills() {
     </div>
   );
 }
+
+//          , React, HTML, CSS, Vue, Angular, jQuery, Bootstrap,
+//Material-UI, Redux

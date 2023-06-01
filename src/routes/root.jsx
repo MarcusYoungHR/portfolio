@@ -1,9 +1,8 @@
-import $ from "jquery";
-import { useEffect } from "react";
 import Bio from "../components/portfolio/bio";
 import Skills from "../components/portfolio/skills";
 import Projects from "../components/portfolio/projects";
 import { Link, Element } from "react-scroll";
+import 'devicon/devicon.min.css';
 
 export default function Root() {
 

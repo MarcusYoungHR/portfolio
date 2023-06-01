@@ -7,7 +7,7 @@ import Progress from "./progress";
 
 export default function Tasks() {
   const { tasks, updateSelectedTaskId } = useContext(ProductivityContext);
-  const [filter, setFilter] = useState("today");
+  const [filter, setFilter] = useState("Today");
 
   const today = getCurrentDay();
 
@@ -23,36 +23,46 @@ export default function Tasks() {
           <div className="col">
             <div className="float-end">
               <div className="row align-items-center">
+                <div className="col text-light fs-5">
+                  {filter === "Today" ? "Today's" : filter} tasks
+                </div>
                 <div className="col">
-                  <div class="dropdown dropstart">
+                  <div className="dropdown dropstart">
                     <button
-                      class="btn btn-success dropdown-toggle"
+                      className="btn btn-success dropdown-toggle"
                       type="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      <i class="bi bi-funnel-fill"></i>
+                      <i className="bi bi-funnel-fill"></i>
                     </button>
-                    <ul class="dropdown-menu">
-                      <li onClick={() => {setFilter('today')}} className={filter === 'today' ? "selected" : ""}>
-                        <div class="dropdown-item tasks-filter-item">
-                          Today
-                        </div>
+                    <ul className="dropdown-menu">
+                      <li
+                        onClick={() => {
+                          setFilter("Today");
+                        }}
+                      >
+                        <div className="dropdown-item tasks-filter-item">Today</div>
                       </li>
-                      <li onClick={() => {setFilter('active')}} className={filter === 'active' ? "selected" : ""}>
-                        <div class="dropdown-item tasks-filter-item">
+                      <li
+                        onClick={() => {
+                          setFilter("Active");
+                        }}
+                      >
+                        <div className="dropdown-item tasks-filter-item">
                           Active
                         </div>
                       </li>
-                      <li onClick={() => {setFilter('all')}} className={filter === 'all' ? "selected" : ""}>
-                        <div class="dropdown-item tasks-filter-item">
-                          All
-                        </div>
+                      <li
+                        onClick={() => {
+                          setFilter("All");
+                        }}
+                      >
+                        <div className="dropdown-item tasks-filter-item">All</div>
                       </li>
                     </ul>
                   </div>
                 </div>
-                <div className="col text-light fs-5">Filter: {filter}</div>
               </div>
             </div>
           </div>
@@ -63,11 +73,11 @@ export default function Tasks() {
               {tasks ? (
                 tasks
                   .filter((task) => {
-                    if (filter === "today") {
+                    if (filter === "Today") {
                       return (
                         task.recurrence.includes(today) && !task.isDisabled
                       );
-                    } else if (filter === "active") {
+                    } else if (filter === "Active") {
                       return !task.isDisabled;
                     } else {
                       return true;

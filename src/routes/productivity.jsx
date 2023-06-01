@@ -7,7 +7,7 @@ import {
   updateWastedTime,
   updateProgress,
 } from "../http/productivity";
-import GoalModal from "../components/productivity/goal-modal";
+import TaskAddEdit from "../components/productivity/task-add-edit";
 import Tasks from "../components/productivity/tasks";
 import Chart from "../components/productivity/chart";
 import { ProductivityContext } from "../store/context/productivity-context";
@@ -144,7 +144,7 @@ export default function Productivity() {
               </Element>
             </div>
           </div>
-          <GoalModal
+          <TaskAddEdit
             type={type}
             setType={setType}
             handleTypeChange={handleTypeChange}

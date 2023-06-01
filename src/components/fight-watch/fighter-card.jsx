@@ -27,17 +27,17 @@ export default function FighterCard({
   }
 
   return (
-    <div className="col">
-      <div className={`card text-bg-dark fighter-card`} id={`fighter-${id}`}>
+    <div className="col ">
+      <div className={`card text-bg-dark fighter-card h-100`} id={`fighter-${id}`}>
         <img
           src={image}
           className="card-img-top fighter-image p-1 rounded"
           alt="..."
         ></img>
-        <div className="card-body d-flex flex-column py-1">
-          <h5 className="card-title mx-auto">{name}</h5>
-          <div className="card-text mx-auto">{`Fighting vs ${next_opponent}`}</div>
-          <div className="card-text mx-auto">{`On ${outputDate}`}</div>
+        <div className="card-body py-1">
+          <h5 className="card-title">{name}</h5>
+          <div className="card-text">{`Fighting vs ${next_opponent}`}</div>
+          <div className="card-text">{`On ${outputDate}`}</div>
         </div>
         <div className="w-100 px-1 py-1">
           <Form method="post" action={`/fight-watch/destroy/${id}`}>

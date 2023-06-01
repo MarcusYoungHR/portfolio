@@ -88,3 +88,17 @@
 .min-vh-75 {
   min-height: 75vh;
 }
+
+.margin-top-70 {
+  margin-top: 70px;
+}
+
+.font-size-3rem {
+  font-size: 3rem;
+}
+
+.icon-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}

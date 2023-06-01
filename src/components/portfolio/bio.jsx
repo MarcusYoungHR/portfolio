@@ -1,13 +1,14 @@
 export default function Bio() {
   return (
-    <div className="row min-vh-100 align-items-center mb-3">
-      <div className="col-md-6 ">
+    <div className="row min-vh-100 mb-3">
+      <div className="col-lg-6 d-flex flex-column justify-content-evenly">
+
+        <div className="octagon mx-auto"></div>
         <h1 className="text-center fw-bold">
           Marcus Young<br></br>Full Stack Software Engineer
         </h1>
-        <div className="octagon mx-auto"></div>
       </div>
-      <div className="col-md-6">
+      <div className="col-lg-6 d-flex flex-column justify-content-center">
         <h1 className="text-center fw-bold">Bio</h1>
         <div className="text-bg-dark rounded-4 p-3 mx-auto d-block mt-4">
           <p className="lh-lg">

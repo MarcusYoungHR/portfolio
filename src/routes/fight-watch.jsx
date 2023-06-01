@@ -15,9 +15,10 @@ import SpinnerOverlay from "../components/spinner-overlay";
 import { FightWatchContext } from "../store/context/fight-watch-context";
 
 function animateScroll(parent, child, callback) {
+  console.log("parent", parent.offset(), "child", child.offset());
   parent.animate(
     {
-      scrollTop: child.offset().top - parent.offset().top + parent.scrollTop(),
+      scrollTop: child.offset().top - parent.offset().top + parent.scrollTop() - 70,
     },
     500,
     callback
@@ -97,18 +98,6 @@ export default function FightWatch() {
     }
   }, [fighters]);
 
-  useEffect(() => {
-    $("#root").removeClass();
-    $("#root").addClass("fight-watch-bg");
-    $('body').addClass('scrollbar-fight-watch')
-    updateInitialLoad(true);
-
-    return () => {
-      $("#root").removeClass("fight-watch-bg");
-      $('body').removeClass('scrollbar-fight-watch')
-    };
-  }, []);
-
   function clickHandler() {
     updateInitialLoad(false);
   }
@@ -116,64 +105,68 @@ export default function FightWatch() {
   return (
     <>
       {loading && <SpinnerOverlay />}
-      <div className="min-vh-100">
-        <nav
-          ref={navbarRef}
-          className="navbar navbar-expand-lg text-bg-dark position-sticky top-0 fight-watch-nav"
-          data-bs-theme="dark"
-        >
-          <div className="container-fluid">
-            <div className="d-flex align-items-center">
-              <svg width="50" height="50">
-                <circle
-                  cx="25"
-                  cy="25"
-                  r="24"
-                  fill="rgb(136, 8, 8)"
-                  stroke="rgb(136, 8, 8)"
-                />
-                <text
-                  x="25"
-                  y="36.5"
-                  textAnchor="middle"
-                  fontSize="30"
-                  fill="white"
-                  fontWeight="600"
-                >
-                  FW
-                </text>
-              </svg>
-              <Link className="navbar-brand text-white nav-link mx-3" to={"/"}>
-                Home
-              </Link>
-            </div>
-            <div className="d-flex">
-              <DropDownSort />
-              <Form className="d-flex" method="post">
-                <input
-                  className="form-control mx-2"
-                  type="text"
-                  placeholder="Search"
-                  aria-label="Search"
-                  name="name"
-                ></input>
-                <button
-                  className="btn btn-outline-danger"
-                  type="submit"
-                  onClick={clickHandler}
-                >
-                  Search
-                </button>
-              </Form>
+      <nav
+        ref={navbarRef}
+        className="navbar navbar-expand-lg text-bg-dark fixed-top fight-watch-nav"
+        data-bs-theme="dark"
+      >
+        <div className="container-fluid">
+          <div className="d-flex align-items-center">
+            <svg width="50" height="50">
+              <circle
+                cx="25"
+                cy="25"
+                r="24"
+                fill="rgb(136, 8, 8)"
+                stroke="rgb(136, 8, 8)"
+              />
+              <text
+                x="25"
+                y="36.5"
+                textAnchor="middle"
+                fontSize="30"
+                fill="white"
+                fontWeight="600"
+              >
+                FW
+              </text>
+            </svg>
+            <Link className="text-light opacity-hover text-decoration-none fs-4 mx-3" to={"/"}>
+              Home
+            </Link>
+          </div>
+          <div className="d-flex">
+            <DropDownSort />
+            <Form className="d-flex" method="post">
+              <input
+                className="form-control mx-2"
+                type="text"
+                placeholder="Search"
+                aria-label="Search"
+                name="name"
+              ></input>
+              <button
+                className="btn btn-outline-danger"
+                type="submit"
+                onClick={clickHandler}
+              >
+                Search
+              </button>
+            </Form>
+          </div>
+        </div>
+      </nav>
+      <div className="container-fluid fighter-container fight-watch-bg scrollbar-fight-watch">
+        <div className="row">
+          <div className="col">
+            <div className="container margin-top-70">
+              {fighters ? (
+                <CardGrid fighters={fighters} />
+              ) : (
+                <h1 className="text-center text-white">Loading...</h1>
+              )}
             </div>
           </div>
-        </nav>
-        <div className="container-fluid fighter-container">
-          {fighters ? (
-            <CardGrid fighters={fighters} />
-          ) : (
-            <h1 className="text-center text-white">Loading...</h1>
-          )}
         </div>
       </div>
     </>

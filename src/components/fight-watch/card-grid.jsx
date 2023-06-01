@@ -52,7 +52,7 @@ export default function CardGrid({ fighters }) {
     });
 
   return (
-    <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 row-cols-xxl-6 g-4 py-3 ">
+    <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 row-cols-xxl-6 g-4 py-3 mb-5">
       {sortedFighters.map((fighter) => {
         return (
           <FighterCard

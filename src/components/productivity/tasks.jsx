@@ -3,9 +3,10 @@ import { useState, useContext, useEffect } from "react";
 import { ProductivityContext } from "../../store/context/productivity-context";
 import { getCurrentDay } from "../../utils/productivity";
 import WastedTime from "./wasted-time";
+import Progress from "./progress";
 
 export default function Tasks() {
-  const { tasks, updateTasks } = useContext(ProductivityContext);
+  const { tasks, updateSelectedTaskId } = useContext(ProductivityContext);
   const [filter, setFilter] = useState("today");
 
   const today = getCurrentDay();
@@ -17,11 +18,94 @@ export default function Tasks() {
   return (
     <div className="row min-vh-100 mb-3">
       <div className="col d-flex flex-column justify-content-evenly pt-5">
-        <div className="row mx-3 rounded-3 bg-primary px-5 align-items-center py-2 my-3">
-          <Outlet />
+        <div className="row rounded-3 bg-primary px-5 align-items-center py-2 my-3">
+          <Progress />
           <div className="col">
             <div className="float-end">
-              <span className="text-light fs-5 mx-3">Filter : </span>
+              <div className="row align-items-center">
+                <div className="col">
+                  <div class="dropdown dropstart">
+                    <button
+                      class="btn btn-success dropdown-toggle"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i class="bi bi-funnel-fill"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li onClick={() => {setFilter('today')}} className={filter === 'today' ? "selected" : ""}>
+                        <div class="dropdown-item tasks-filter-item">
+                          Today
+                        </div>
+                      </li>
+                      <li onClick={() => {setFilter('active')}} className={filter === 'active' ? "selected" : ""}>
+                        <div class="dropdown-item tasks-filter-item">
+                          Active
+                        </div>
+                      </li>
+                      <li onClick={() => {setFilter('all')}} className={filter === 'all' ? "selected" : ""}>
+                        <div class="dropdown-item tasks-filter-item">
+                          All
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="col text-light fs-5">Filter: {filter}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 row-cols-xxl-6 bg-primary rounded-3 px-5 py-3 mb-3">
+              {tasks ? (
+                tasks
+                  .filter((task) => {
+                    if (filter === "today") {
+                      return (
+                        task.recurrence.includes(today) && !task.isDisabled
+                      );
+                    } else if (filter === "active") {
+                      return !task.isDisabled;
+                    } else {
+                      return true;
+                    }
+                  })
+                  .map((task, i) => {
+                    return (
+                      <div className="col my-2" key={`task-${i}`}>
+                        <button
+                          onClick={() => {
+                            updateSelectedTaskId(task.id);
+                          }}
+                          className="btn btn-success text-light mx-auto fw-semibold w-100"
+                        >
+                          {task.isDisabled ? "(disabled) " : ""}
+                          {task.name}
+                        </button>
+                      </div>
+                    );
+                  })
+              ) : (
+                <div>loading...</div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="row rounded-3 bg-primary px-5 mb-5 align-items-center py-2">
+          <div className="col">
+            <WastedTime />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+{
+  /* <span className="text-light fs-5 mx-3">Filter : </span>
               <div className="form-check form-check-inline">
                 <input
                   className="form-check-input"
@@ -72,47 +156,5 @@ export default function Tasks() {
                 >
                   All
                 </label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col">
-            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 row-cols-xxl-6 bg-primary rounded-3 mx-3 px-5 py-3 mb-3">
-              {tasks ? (
-                tasks
-                  .filter((task) => {
-                    if (filter === "today") {
-                      return task.recurrence.includes(today);
-                    } else {
-                      return true;
-                    }
-                  })
-                  .map((task, i) => {
-                    return (
-                      <div className="col my-2" key={`task-${i}`}>
-                        <Link
-                          to={"/productivity/progress/" + task.id}
-                          className="btn btn-success text-light mx-auto fw-semibold w-100"
-                          key={Math.random()}
-                        >
-                          {task.name}
-                        </Link>
-                      </div>
-                    );
-                  })
-              ) : (
-                <div>loading...</div>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="row mx-3 rounded-3 bg-primary px-5 mb-5 align-items-center py-2 mb-5">
-          <div className="col">
-            <WastedTime />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+              </div> */
 }

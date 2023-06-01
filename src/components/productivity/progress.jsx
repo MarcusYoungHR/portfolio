@@ -1,11 +1,9 @@
-import { Form, useParams } from "react-router-dom";
-import { updateProgress } from "../http/productivity";
+import { updateProgress } from "../../http/productivity";
 import { useContext, useState, useEffect } from "react";
-import Timer from "../components/productivity/timer";
-import Iterative from "../components/productivity/iterative";
-import { ProductivityContext } from "../store/context/productivity-context";
-import { findCurrentProgress, getTodaysDate } from "../utils/productivity";
-import TaskUpdateButton from "../components/productivity/task-update-button";
+import Timer from "./timer";
+import Iterative from "./iterative";
+import { ProductivityContext } from "../../store/context/productivity-context";
+import { findCurrentProgress, getTodaysDate } from "../../utils/productivity";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -15,44 +13,49 @@ export async function action({ request }) {
 }
 
 export default function Progress() {
-  const { taskId } = useParams();
-  const { progress } = useContext(ProductivityContext);
-  const idNumber = Number(taskId);
-  const [currentProgress, setCurrentProgress] = useState(null);
+  const { progress, selectedTaskId, currentProgress, updateCurrentProgress } =
+    useContext(ProductivityContext);
   const [isCurrent, setIsCurrent] = useState(true);
   const today = getTodaysDate();
 
-  // useEffect(() => {
-  //   setCurrentProgress(findCurrentProgress(idNumber, today, progress));
-  // }, [idNumber, today, progress]);
-
   useEffect(() => {
-    if (!isCurrent) {
-      const filteredProgress = progress.filter(
-        (item) => item.taskId === Number(taskId)
-      );
-      console.log("filteredProgress", filteredProgress);
-      for (let i = filteredProgress.length - 2; i >= 0; i--) {
-        if (
-          filteredProgress[i].percentage < 100 &&
-          filteredProgress[i].percentage !== null
-        ) {
-          setCurrentProgress(filteredProgress[i]);
-          return;
+    if (selectedTaskId) {
+      if (!isCurrent) {
+        const filteredProgress = progress.filter(
+          (item) => item.taskId === selectedTaskId
+        );
+        console.log("filteredProgress", filteredProgress);
+        for (let i = filteredProgress.length - 2; i >= 0; i--) {
+          if (
+            filteredProgress[i].percentage < 100 &&
+            filteredProgress[i].percentage !== null
+          ) {
+            updateCurrentProgress(filteredProgress[i]);
+            return;
+          }
         }
       }
-    }
 
-    const today = getTodaysDate();
-    const idNumber = Number(taskId);
-    setCurrentProgress(findCurrentProgress(idNumber, today, progress));
-  }, [taskId, progress, isCurrent]);
+      const today = getTodaysDate();
+      updateCurrentProgress(
+        findCurrentProgress(selectedTaskId, today, progress)
+      );
+    }
+  }, [selectedTaskId, progress, isCurrent]);
 
   const handleChange = (event) => {
     setIsCurrent(event.target.value === "current");
   };
 
-  if (!currentProgress) {
+  if (!selectedTaskId) {
+    return (
+      <div className="col">
+        <h1 className="text-light">Please Select A Task</h1>
+      </div>
+    );
+  }
+
+  if (Object.keys(currentProgress).length === 0) {
     return (
       <>
         <div className="col-auto py-2">

@@ -84,3 +84,7 @@
 .scrollbar-productivity::-webkit-scrollbar-thumb {
   background-color: #1A5653; /* Change this to your preferred color */
 }
+
+.min-vh-75 {
+  min-height: 75vh;
+}

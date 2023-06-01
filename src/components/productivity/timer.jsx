@@ -1,16 +1,13 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { useParams } from "react-router-dom";
 import { ProductivityContext } from "../../store/context/productivity-context";
 import { findCurrentProgress, getTodaysDate } from "../../utils/productivity";
 import TaskUpdateButton from "./task-update-button";
 
 const Timer = ({ isCurrent }) => {
-  const { taskId } = useParams();
-  const { progress, updateProgress } = useContext(ProductivityContext);
+  const { progress, updateProgress, currentProgress, updateCurrentProgress, selectedTaskId } = useContext(ProductivityContext);
   const [isRunning, setIsRunning] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
   const startTimeRef = useRef(null);
-  const [currentProgress, setCurrentProgress] = useState(null);
 
   const updateRemaining = (id, remaining) => {
     updateProgress((prevProgress) =>
@@ -34,21 +31,21 @@ const Timer = ({ isCurrent }) => {
   useEffect(() => {
     if (!isCurrent) {
       const filteredProgress = progress.filter(
-        (item) => item.taskId === Number(taskId)
+        (item) => item.taskId === selectedTaskId
       );
       console.log('filteredProgress', filteredProgress)
       for (let i = filteredProgress.length - 2; i >= 0; i--) {
         if (filteredProgress[i].percentage < 100 && filteredProgress[i].percentage !== null) {
-          setCurrentProgress(filteredProgress[i]);
+          updateCurrentProgress(filteredProgress[i]);
           return
         }
       }
     }
 
     const today = getTodaysDate();
-    const idNumber = Number(taskId);
-    setCurrentProgress(findCurrentProgress(idNumber, today, progress));
-  }, [taskId, progress, isCurrent]);
+    const idNumber = selectedTaskId
+    updateCurrentProgress(findCurrentProgress(idNumber, today, progress));
+  }, [selectedTaskId, progress, isCurrent]);
 
   useEffect(() => {
     if (isRunning) {

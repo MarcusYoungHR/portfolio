@@ -1,30 +1,32 @@
-import { Link, useLoaderData, redirect, Outlet } from "react-router-dom";
+import { Link, useLoaderData, redirect, useLocation} from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import SpinnerOverlay from "../components/spinner-overlay";
 import {
   addTask,
   loadProductivityData,
   updateWastedTime,
+  updateProgress,
 } from "../http/productivity";
 import GoalModal from "../components/productivity/goal-modal";
 import Tasks from "../components/productivity/tasks";
 import Chart from "../components/productivity/chart";
-import Bio from "../components/portfolio/bio";
-import Projects from "../components/portfolio/projects";
-import Skills from "../components/portfolio/skills";
 import { ProductivityContext } from "../store/context/productivity-context";
 import "../styles/productivity.css";
-import $ from "jquery";
 import { Link as ScrollLink, Element } from "react-scroll";
 
-export async function action({ request }) {
+export async function action({ params, request }) {
   const formData = await request.formData();
   const intent = formData.get("intent");
   const updates = Object.fromEntries(formData);
 
+  if (intent === "update progress") {
+    const progress = await updateProgress(updates);
+    return redirect(`/productivity`);
+  }
+
   if (intent === "wasted time") {
     const time = await updateWastedTime(updates);
-    return redirect("/productivity");
+    return redirect(`/productivity`);
   }
 
   const task = await addTask(updates);
@@ -38,6 +40,7 @@ export async function loader() {
 
 export default function Productivity() {
   const [type, setType] = useState(null);
+  const location = useLocation();
   const { updateTasks, updateProgress, updateWastedTime } =
     useContext(ProductivityContext);
 
@@ -73,7 +76,7 @@ export default function Productivity() {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
-              <li class="nav-item">
+              <li className="nav-item">
                 <Link
                   to="/"
                   spy={true}
@@ -86,27 +89,27 @@ export default function Productivity() {
                   <a>Home</a>
                 </Link>
               </li>
-              <li class="nav-item">
+              <li className="nav-item">
                 <ScrollLink
                   to="tasks"
                   spy={true}
                   smooth={true}
                   offset={-70}
                   duration={500}
-                  className="text-light opacity-hover text-decoration-none fs-4 me-3"
+                  className="text-light opacity-hover text-decoration-none fs-4 me-3 nav-link-productivity"
                   containerId="productivity-container"
                 >
                   <a>Tasks</a>
                 </ScrollLink>
               </li>
-              <li class="nav-item">
+              <li className="nav-item">
                 <ScrollLink
                   to="chart"
                   spy={true}
                   smooth={true}
                   offset={-50}
                   duration={500}
-                  className="text-light opacity-hover text-decoration-none fs-4 me-3"
+                  className="text-light opacity-hover text-decoration-none fs-4 me-3 nav-link-productivity"
                   containerId="productivity-container"
                 >
                   <a>Chart</a>
@@ -150,15 +153,4 @@ export default function Productivity() {
       </div>
     </>
   );
-}
-
-{
-  /*  */
-}
-{
-  /* <div className="row">
-          <div className="col">
-            <Outlet />
-          </div>
-        </div> */
 }

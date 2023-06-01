@@ -7,12 +7,18 @@ export const ProductivityContext = createContext({
   updateProgress: () => {},
   wastedTime: [],
   updateWastedTime: () => {},
+  selectedTaskId: null,
+  updateSelectedTaskId: () => {},
+  currentProgress: {},
+  updateCurrentProgress: () => {},
 })
 
 export default function ProductivityContextProvider({ children }) {
   const [tasks, setTasks] = useState([]);
   const [progress, setProgress] = useState([]);
   const [wastedTime, setWastedTime] = useState([]);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [currentProgress, setCurrentProgress] = useState({});
 
   function updateTasks(tasks) {
     setTasks(tasks);
@@ -26,6 +32,14 @@ export default function ProductivityContextProvider({ children }) {
     setWastedTime(wastedTime);
   }
 
+  function updateSelectedTaskId(selectedTaskId) {
+    setSelectedTaskId(selectedTaskId);
+  }
+
+  function updateCurrentProgress(currentProgress) {
+    setCurrentProgress(currentProgress);
+  }
+
   const value = {
     tasks,
     updateTasks,
@@ -33,6 +47,10 @@ export default function ProductivityContextProvider({ children }) {
     updateProgress,
     wastedTime,
     updateWastedTime,
+    selectedTaskId,
+    updateSelectedTaskId,
+    currentProgress,
+    updateCurrentProgress,
   };
 
   return (

@@ -5,12 +5,9 @@ import { findCurrentProgress, getTodaysDate } from "../../utils/productivity";
 import TaskUpdateButton from "./task-update-button";
 
 function Iterative() {
-  const { taskId } = useParams();
-  const { progress, updateProgress } = useContext(ProductivityContext);
+  const { progress, updateProgress, selectedTaskId, currentProgress, updateCurrentProgress } = useContext(ProductivityContext);
   const today = getTodaysDate();
-  const idNumber = Number(taskId);
 
-  const currentProgress = findCurrentProgress(idNumber, today, progress);
   const { remaining, id } = currentProgress;
 
   const handleUpdate = () => {
@@ -34,7 +31,7 @@ function Iterative() {
       </div>
       <div className="col-auto pe-0">
         <button className="btn btn-success" onClick={handleUpdate}>
-        <i class="bi bi-dash-lg fs-5"></i>
+        <i className="bi bi-dash-lg fs-5"></i>
         </button>
       </div>
       <div className="col-auto">

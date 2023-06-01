@@ -8,8 +8,6 @@ const Stopwatch = () => {
   const [startTime, setStartTime] = useState(null);
   const { wastedTime, updateWastedTime } = useContext(ProductivityContext);
 
-  console.log("wastedTime", wastedTime);
-
   const today = getTodaysDate();
 
   const currentWastedTime = findCurrentWastedTime(today, wastedTime);

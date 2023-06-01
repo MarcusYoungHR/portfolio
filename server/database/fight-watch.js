@@ -85,6 +85,7 @@ const tasks = {
   goal: notNullIntField,
   recurrence: { allowNull: false, type: Sequelize.JSON },
   weight: { allowNull: true, type: Sequelize.INTEGER },
+  isDisabled: { allowNull: true, type: Sequelize.BOOLEAN, defaultValue: false },
 };
 
 const progress = {
@@ -220,11 +221,8 @@ const findTasksByDay = async (dayOfWeek) => {
   const tasks = await Tasks.findAll();
 
   for (const task of tasks) {
-    if (hasCurrentDayKey(task)) {
-      console.log("Task has current day key");
-      await createProgressFromTask(task);
-    } else {
-      console.log("Task does not have current day key");
+    if (!hasCurrentDayKey(task) || task.isDisabled) {
+      console.log("Task is disabled or does not have current day key");
       await createProgressFromTask({
         name: task.name,
         remaining: null,
@@ -233,6 +231,9 @@ const findTasksByDay = async (dayOfWeek) => {
         goal: null,
         measurement: task.measurement,
       });
+    } else {
+      console.log("Task has current day key");
+      await createProgressFromTask(task);
     }
   }
 };

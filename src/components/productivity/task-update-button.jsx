@@ -12,6 +12,7 @@ export default function ProgressUpdateButton({ currentProgress, styles }) {
           name="remaining"
           value={currentProgress.remaining}
         />
+        <input type="hidden" name="intent" value='update progress' />
         <input type="hidden" name="id" value={currentProgress.id} />
       </Form>
     </>

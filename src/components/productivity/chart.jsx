@@ -79,7 +79,6 @@ const groupProgressByDate = (progress) => {
     }
     return acc;
   }, {});
-  console.log("groupedProgress", groupedProgress);
 
   return Object.values(groupedProgress).map((item) => {
     return {
@@ -104,7 +103,7 @@ const createDatasets = (values) => {
       borderColor: rgbaString(colors[results.length], 0.7),
       backgroundColor: rgbaString(colors[results.length], 0.2),
       spanGaps: true,
-      pointRadius: 6,
+      pointRadius: 4,
     });
   }
   return results;
@@ -185,7 +184,6 @@ export default function Chart() {
   const plotIndividualTask = (xAxis, yAxis) => {
     xAxis = getDatesFromArray(progress);
     const groupedProgress = groupByTaskId(progress, xAxis);
-    console.log("groupedProgress", groupedProgress);
     setXAxisValues(xAxis);
     setYAxisValues(groupedProgress);
   };
@@ -227,7 +225,7 @@ export default function Chart() {
   };
 
   return (
-    <div className="row min-vh-100 mb-5">
+    <div className="row min-vh-100 mt-5">
       <div className="col">
         <div className="row mb-2 mt-2">
           <div className="col">
@@ -272,7 +270,7 @@ export default function Chart() {
             </div>
           </div>
         </div>
-        <div className="row p-0 vh-75">
+        <div className="row p-0 min-vh-75">
           <div className="col">
               <Line options={options} data={data} className="bg-white rounded-4"/>
           </div>

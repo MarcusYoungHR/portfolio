@@ -42,7 +42,7 @@ export default function Root() {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
-              <li class="nav-item">
+              <li className="nav-item">
                 <Link
                   to="bio"
                   spy={true}
@@ -55,7 +55,7 @@ export default function Root() {
                   <a>Bio</a>
                 </Link>
               </li>
-              <li class="nav-item">
+              <li className="nav-item">
                 <Link
                   to="projects"
                   spy={true}
@@ -68,7 +68,7 @@ export default function Root() {
                   <a>Projects</a>
                 </Link>
               </li>
-              <li class="nav-item">
+              <li className="nav-item">
                 <Link
                   to="skills"
                   spy={true}

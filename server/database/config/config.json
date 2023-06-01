@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "Elliot1!",
+    "database": "fight_watch",
+    "host": "ec2-18-217-156-71.us-east-2.compute.amazonaws.com",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "Elliot1!",
+    "database": "fight_watch",
+    "host": "ec2-18-217-156-71.us-east-2.compute.amazonaws.com",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "Elliot1!",
+    "database": "fight_watch",
+    "host": "ec2-18-217-156-71.us-east-2.compute.amazonaws.com",
+    "dialect": "mysql"
+  }
+}

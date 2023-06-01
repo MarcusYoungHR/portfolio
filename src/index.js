@@ -22,10 +22,6 @@ import Productivity, {
   action as productivityAction,
   loader as productivityLoader,
 } from "./routes/productivity";
-import Progress, { action as ProgressAction } from "./routes/progress";
-import Chart from "./routes/chart";
-import WastedTime, { action as wastedTimeAction } from "./routes/wasted-time";
-import Tasks, { action as tasksAction } from "./routes/tasks";
 import Test from "./routes/test";
 
 import FightWatchContextProvider from "./store/context/fight-watch-context";
@@ -69,37 +65,6 @@ const router = createBrowserRouter([
     ),
     loader: productivityLoader,
     action: productivityAction,
-    children: [
-      {
-        index: true,
-        element: (
-          <>
-            <div className="col">
-              <h1 className="text-light">Please Select A Task</h1>
-            </div>
-          </>
-        ),
-      },
-      {
-        path: "/productivity/chart",
-        element: <Chart />,
-      },
-      {
-        path: "progress/:taskId",
-        element: <Progress />,
-        action: ProgressAction,
-      },
-      {
-        path: "tasks",
-        element: <Tasks />,
-        action: tasksAction,
-      },
-      {
-        path: "wasted-time",
-        element: <WastedTime />,
-        action: wastedTimeAction,
-      },
-    ],
   },
 ]);
 

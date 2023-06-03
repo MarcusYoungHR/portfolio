@@ -64,7 +64,7 @@ const Stopwatch = () => {
         <h1 className="text-light">{getTime(time)}</h1>
       </div>
       <div className="col-auto pe-0">
-        <button className="btn btn-success border-right-radius-none" onClick={toggleRunning}>
+        <button className="btn btn-success border-right-radius-none fs-5" onClick={toggleRunning}>
           {isRunning ? "Stop" : "Start"}
         </button>
       </div>
@@ -72,7 +72,7 @@ const Stopwatch = () => {
           <Form method="post">
             <input type="hidden" name="time" value={currentWastedTime.time} />
             <input type="hidden" name="date" value={currentWastedTime.date} />
-            <button type="submit" name="intent" value="wasted time" className="btn btn-success border-left-radius-none">
+            <button type="submit" name="intent" value="wasted time" className="btn btn-success border-left-radius-none fs-5">
               Update
             </button>
           </Form>

@@ -20,7 +20,7 @@ export default function DropDownSort() {
   return (
     <div className="dropdown fight-watch-dropdown">
       <button
-        className="btn btn-danger dropdown-toggle fight-watch-button clickable-elem"
+        className="btn btn-danger dropdown-toggle fight-watch-button clickable-elem fs-5"
         type="button"
         data-bs-toggle="dropdown"
         aria-expanded="false"

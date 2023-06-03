@@ -1,23 +1,7 @@
 import axios from "axios";
 
-function refactorTask(task) {
-  const refactoredTask = {
-    recurrence: [],
-  };
-
-  for (const key in task) {
-    if (task[key] === "on") {
-      refactoredTask.recurrence.push(key);
-    } else {
-      refactoredTask[key] = task[key];
-    }
-  }
-
-  return refactoredTask;
-}
-
 export async function addTask(task) {
-  task = refactorTask(task);
+  task.recurrence = task.recurrence.split(",");
   return axios
     .post("/add-task", {
       task,

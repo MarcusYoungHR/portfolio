@@ -13,9 +13,9 @@ import CardGrid from "../components/fight-watch/card-grid";
 import DropDownSort from "../components/fight-watch/drop-down-sort";
 import SpinnerOverlay from "../components/spinner-overlay";
 import { FightWatchContext } from "../store/context/fight-watch-context";
+import ScrollToTop from "../components/scroll-to-top";
 
 function animateScroll(parent, child, callback) {
-  console.log("parent", parent.offset(), "child", child.offset());
   parent.animate(
     {
       scrollTop: child.offset().top - parent.offset().top + parent.scrollTop() - 70,
@@ -146,7 +146,7 @@ export default function FightWatch() {
                 name="name"
               ></input>
               <button
-                className="btn btn-outline-danger"
+                className="btn btn-outline-danger fs-5 text-light"
                 type="submit"
                 onClick={clickHandler}
               >
@@ -156,16 +156,19 @@ export default function FightWatch() {
           </div>
         </div>
       </nav>
-      <div className="container-fluid fighter-container fight-watch-bg scrollbar-fight-watch">
+      <div className="container-fluid fighter-container fight-watch-bg scrollbar-fight-watch" id="fight-watch">
         <div className="row">
-          <div className="col">
-            <div className="container margin-top-70">
+          <div className="col-12">
+            <div className="container margin-top-70 margin-top-100-phone">
               {fighters ? (
                 <CardGrid fighters={fighters} />
               ) : (
                 <h1 className="text-center text-white">Loading...</h1>
               )}
             </div>
+          </div>
+          <div className="col">
+            <ScrollToTop variant="dark" containerId="fight-watch" />
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 export default function Bio() {
   return (
-    <div className="row min-vh-100 mb-3">
+    <div className="row min-vh-100 mb-3 margin-top-100-phone">
       <div className="col-lg-6 d-flex flex-column justify-content-evenly">
 
         <div className="octagon mx-auto"></div>
@@ -10,7 +10,7 @@ export default function Bio() {
       </div>
       <div className="col-lg-6 d-flex flex-column justify-content-center">
         <h1 className="text-center fw-bold">Bio</h1>
-        <div className="text-bg-dark rounded-4 p-3 mx-auto d-block mt-4">
+        <div className="text-bg-dark rounded-4 p-3 mx-auto d-block mt-4 fs-5">
           <p className="lh-lg">
             As a Full Stack Software Engineer with extensive experience in a
             wide range of technologies including React, Node.js, MySQL, AWS, and

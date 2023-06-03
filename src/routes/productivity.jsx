@@ -13,6 +13,7 @@ import Chart from "../components/productivity/chart";
 import { ProductivityContext } from "../store/context/productivity-context";
 import "../styles/productivity.css";
 import { Link as ScrollLink, Element } from "react-scroll";
+import ScrollToTop from "../components/scroll-to-top";
 
 export async function action({ params, request }) {
   const formData = await request.formData();
@@ -40,7 +41,7 @@ export async function loader() {
 
 export default function Productivity() {
   const [type, setType] = useState(null);
-  const location = useLocation();
+  const [modalIsShowing, setModalIsShowing] = useState(false);
   const { updateTasks, updateProgress, updateWastedTime } =
     useContext(ProductivityContext);
 
@@ -86,7 +87,7 @@ export default function Productivity() {
                   className="text-light opacity-hover text-decoration-none fs-4 me-3"
                   containerId="portfolio"
                 >
-                  <a>Home</a>
+                  <span className="me-2">Home</span>
                 </Link>
               </li>
               <li className="nav-item">
@@ -99,7 +100,7 @@ export default function Productivity() {
                   className="text-light opacity-hover text-decoration-none fs-4 me-3 nav-link-productivity"
                   containerId="productivity-container"
                 >
-                  <a>Tasks</a>
+                  <span className="me-2">Tasks</span>
                 </ScrollLink>
               </li>
               <li className="nav-item">
@@ -112,15 +113,14 @@ export default function Productivity() {
                   className="text-light opacity-hover text-decoration-none fs-4 me-3 nav-link-productivity"
                   containerId="productivity-container"
                 >
-                  <a>Chart</a>
+                  <span className="me-2">Chart</span>
                 </ScrollLink>
               </li>
               <li>
                 <button
                   type="button"
                   className="btn btn-success float-end text-center"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal"
+                  onClick={() => setModalIsShowing(true)}
                 >
                   <i className="bi bi-plus-lg fs-5"></i>
                 </button>
@@ -134,7 +134,7 @@ export default function Productivity() {
         id="productivity-container"
       >
         <div className="row">
-          <div className="col">
+          <div className="col-12">
             <div className="container">
               <Element name="tasks">
                 <Tasks />
@@ -144,10 +144,15 @@ export default function Productivity() {
               </Element>
             </div>
           </div>
+          <div className="col">
+            <ScrollToTop variant="primary" containerId="productivity-container"/>
+          </div>
           <TaskAddEdit
             type={type}
             setType={setType}
             handleTypeChange={handleTypeChange}
+            setModalIsShowing={setModalIsShowing}
+            modalIsShowing={modalIsShowing}
           />
         </div>
       </div>

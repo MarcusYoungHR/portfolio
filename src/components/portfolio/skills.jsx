@@ -106,7 +106,7 @@ export default function Skills() {
           </div>
           <div className="col-auto mx-auto">
             <a
-              href="https://github.com/MarcusYoungHR"
+              href="https://github.com/MarcusYoungHR/portfolio"
               target="_blank"
               rel="noopener noreferrer"
               className="link-light"

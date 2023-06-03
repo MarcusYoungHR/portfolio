@@ -15,7 +15,7 @@ export default function Card({ data }) {
             <Link className="link-light nav-link" to={link}>
               <h4 className="card-title opacity-hover">{title}</h4>
             </Link>
-            <p className="card-text">{description}</p>
+            <p className="card-text fs-5">{description}</p>
           </div>
         </div>
       </div>

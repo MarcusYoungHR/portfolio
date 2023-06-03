@@ -223,14 +223,6 @@ const findTasksByDay = async (dayOfWeek) => {
   for (const task of tasks) {
     if (!hasCurrentDayKey(task) || task.isDisabled) {
       console.log("Task is disabled or does not have current day key");
-      await createProgressFromTask({
-        name: task.name,
-        remaining: null,
-        date: format(new Date(), "yyyy-MM-dd"),
-        taskId: task.id,
-        goal: null,
-        measurement: task.measurement,
-      });
     } else {
       console.log("Task has current day key");
       await createProgressFromTask(task);

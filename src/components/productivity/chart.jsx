@@ -11,7 +11,34 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { ProductivityContext } from "../../store/context/productivity-context";
-import { parseISO, eachDayOfInterval, format } from "date-fns";
+import { parseISO, eachDayOfInterval, format, isSameDay } from "date-fns";
+import { useNavigation } from "react-router";
+
+function fillMissingDates(data, startDateStr, endDateStr) {
+  const startDate = parseISO(startDateStr);
+  const endDate = parseISO(endDateStr);
+  const allDates = eachDayOfInterval({ start: startDate, end: endDate });
+  const result = [];
+
+  for (let date of allDates) {
+    const existingObject = data.find((d) => isSameDay(parseISO(d.date), date));
+
+    if (existingObject) {
+      result.push(existingObject.percentage);
+    } else {
+      result.push(null);
+    }
+  }
+  return result;
+}
+
+function createIndividualTaskYAxisValues(groupedProgress) {
+  const result = {}
+  for (let task in groupedProgress) {
+    result[task] = fillMissingDates(groupedProgress[task], "2023-05-15", "2023-06-02");
+  }
+  return result;
+}
 
 function getDatesFromArray(arr) {
   // Check if array is empty or does not contain necessary data
@@ -138,7 +165,7 @@ function groupByTaskId(dataArray, dates) {
     }
 
     // Push the current item into its group
-    grouped[item.name].push(item.percentage);
+    grouped[item.name].push(item);
 
     // Return the updated groups object
     return grouped;
@@ -156,10 +183,12 @@ ChartJS.register(
 );
 
 export default function Chart() {
+  const [isLoading, setIsLoading] = useState(false);
   const { progress, wastedTime, tasks } = useContext(ProductivityContext);
   const [dataType, setDataType] = useState(dataTypes.individualTask);
   const [xAxisValues, setXAxisValues] = useState([]);
   const [yAxisValues, setYAxisValues] = useState([]);
+  const navigation = useNavigation();
 
   const plotTaskAverage = (xAxis, yAxis) => {
     const pointsArray = groupProgressByDate(progress);
@@ -184,9 +213,22 @@ export default function Chart() {
   const plotIndividualTask = (xAxis, yAxis) => {
     xAxis = getDatesFromArray(progress);
     const groupedProgress = groupByTaskId(progress, xAxis);
+    let taskPercentageValues;
+    if (!isLoading) {
+      taskPercentageValues = createIndividualTaskYAxisValues(groupedProgress);
+      setYAxisValues(taskPercentageValues);
+    }
+
     setXAxisValues(xAxis);
-    setYAxisValues(groupedProgress);
   };
+
+  useEffect(() => {
+    if (navigation.state !== "idle") {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [navigation]);
 
   useEffect(() => {
     const tempXAxisValues = [];
@@ -198,7 +240,7 @@ export default function Chart() {
       : dataType.type === "individualTask"
       ? plotIndividualTask(tempXAxisValues, tempYAxisValues)
       : console.log("not daily average");
-  }, [progress, dataType]);
+  }, [progress, dataType, isLoading]);
 
   const data = {
     labels: xAxisValues,
@@ -272,7 +314,11 @@ export default function Chart() {
         </div>
         <div className="row p-0 min-vh-75">
           <div className="col">
-              <Line options={options} data={data} className="bg-white rounded-4"/>
+            <Line
+              options={options}
+              data={data}
+              className="bg-white rounded-4"
+            />
           </div>
         </div>
       </div>

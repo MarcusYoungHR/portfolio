@@ -102,3 +102,39 @@
   flex-wrap: wrap;
   width: 100%;
 }
+
+@media screen and (max-width: 576px) {
+  .margin-top-100-phone {
+    margin-top: 100px !important;
+  }
+
+  .margin-bottom {
+    margin-bottom: 100px !important;
+  }
+
+  .justify-content-center-phone {
+    justify-content: center;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 12px
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s;
+}
+
+.fade-out {
+  animation: fadeOut 0.5s;
+}

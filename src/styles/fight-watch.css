@@ -27,9 +27,6 @@
   pointer-events: none;
 }
 
-::-webkit-scrollbar {
-  width: 8px
-}
 
 ::-webkit-scrollbar-button {
   display: none

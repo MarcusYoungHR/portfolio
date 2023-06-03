@@ -2,10 +2,10 @@ import Bio from "../components/portfolio/bio";
 import Skills from "../components/portfolio/skills";
 import Projects from "../components/portfolio/projects";
 import { Link, Element } from "react-scroll";
-import 'devicon/devicon.min.css';
+import "devicon/devicon.min.css";
+import ScrollToTop from "../components/scroll-to-top";
 
 export default function Root() {
-
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -48,10 +48,10 @@ export default function Root() {
                   smooth={true}
                   offset={-70}
                   duration={500}
-                  className="nav-link"
+                  className="nav-link fs-5"
                   containerId="portfolio"
                 >
-                  <a>Bio</a>
+                  <span>Bio</span>
                 </Link>
               </li>
               <li className="nav-item">
@@ -61,10 +61,10 @@ export default function Root() {
                   smooth={true}
                   offset={-70}
                   duration={500}
-                  className="nav-link"
+                  className="nav-link fs-5"
                   containerId="portfolio"
                 >
-                  <a>Projects</a>
+                  <span>Projects</span>
                 </Link>
               </li>
               <li className="nav-item">
@@ -74,19 +74,22 @@ export default function Root() {
                   smooth={true}
                   offset={-70}
                   duration={500}
-                  className="nav-link"
+                  className="nav-link fs-5"
                   containerId="portfolio"
                 >
-                  <a>Skills</a>
+                  <span>Skills</span>
                 </Link>
               </li>
             </ul>
           </div>
         </div>
       </nav>
-      <div className="container-fluid portfolio-bg scrollbar-portfolio" id="portfolio">
+      <div
+        className="container-fluid portfolio-bg scrollbar-portfolio"
+        id="portfolio"
+      >
         <div className="row">
-          <div className="col">
+          <div className="col-12">
             <div className="container">
               <Element name="bio">
                 <Bio />
@@ -98,6 +101,9 @@ export default function Root() {
                 <Skills />
               </Element>
             </div>
+          </div>
+          <div className="col">
+            <ScrollToTop variant="dark" containerId="portfolio" />
           </div>
         </div>
       </div>

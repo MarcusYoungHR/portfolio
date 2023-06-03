@@ -36,12 +36,12 @@ export default function FighterCard({
         ></img>
         <div className="card-body py-1">
           <h5 className="card-title">{name}</h5>
-          <div className="card-text">{`Fighting vs ${next_opponent}`}</div>
-          <div className="card-text">{`On ${outputDate}`}</div>
+          <div className="card-text fs-5">{`Fighting vs ${next_opponent}`}</div>
+          <div className="card-text fs-5">{`On ${outputDate}`}</div>
         </div>
         <div className="w-100 px-1 py-1">
           <Form method="post" action={`/fight-watch/destroy/${id}`}>
-            <button className="btn btn-outline-danger w-100" type="submit" onClick={clickHandler}>
+            <button className="btn btn-outline-danger w-100 text-light" type="submit" onClick={clickHandler}>
               Remove
             </button>
           </Form>

@@ -5,7 +5,8 @@
 // Override the warning color
 $theme-colors: map-merge($theme-colors, (
   "primary": #1A5653,
-  "success": #202A44
+  "success": #202A44,
+  "danger": #880808
 ));
 
 $spacers: map-merge(

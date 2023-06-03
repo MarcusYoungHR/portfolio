@@ -33,7 +33,6 @@ const Timer = ({ isCurrent }) => {
       const filteredProgress = progress.filter(
         (item) => item.taskId === selectedTaskId
       );
-      console.log('filteredProgress', filteredProgress)
       for (let i = filteredProgress.length - 2; i >= 0; i--) {
         if (filteredProgress[i].percentage < 100 && filteredProgress[i].percentage !== null) {
           updateCurrentProgress(filteredProgress[i]);

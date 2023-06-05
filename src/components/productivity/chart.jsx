@@ -13,6 +13,7 @@ import { Line } from "react-chartjs-2";
 import { ProductivityContext } from "../../store/context/productivity-context";
 import { parseISO, eachDayOfInterval, format, isSameDay } from "date-fns";
 import { useNavigation } from "react-router";
+import {getTodaysDate} from "../../utils/productivity"
 
 function fillMissingDates(data, startDateStr, endDateStr) {
   const startDate = parseISO(startDateStr);
@@ -35,7 +36,7 @@ function fillMissingDates(data, startDateStr, endDateStr) {
 function createIndividualTaskYAxisValues(groupedProgress) {
   const result = {}
   for (let task in groupedProgress) {
-    result[task] = fillMissingDates(groupedProgress[task], "2023-05-15", "2023-06-02");
+    result[task] = fillMissingDates(groupedProgress[task], "2023-05-15", getTodaysDate());
   }
   return result;
 }

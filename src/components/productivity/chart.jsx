@@ -33,10 +33,15 @@ function fillMissingDates(data, startDateStr, endDateStr) {
   return result;
 }
 
-function createIndividualTaskYAxisValues(groupedProgress) {
+function createIndividualTaskYAxisValues(groupedProgress, progress) {
+  // const startDate = progress[0].date;
+  let startDate
+  if (progress.length) {
+    startDate = progress[0].date;
+  }
   const result = {}
   for (let task in groupedProgress) {
-    result[task] = fillMissingDates(groupedProgress[task], "2023-05-15", getTodaysDate());
+    result[task] = fillMissingDates(groupedProgress[task], startDate, getTodaysDate());
   }
   return result;
 }
@@ -216,7 +221,7 @@ export default function Chart() {
     const groupedProgress = groupByTaskId(progress, xAxis);
     let taskPercentageValues;
     if (!isLoading) {
-      taskPercentageValues = createIndividualTaskYAxisValues(groupedProgress);
+      taskPercentageValues = createIndividualTaskYAxisValues(groupedProgress, progress);
       setYAxisValues(taskPercentageValues);
     }
 

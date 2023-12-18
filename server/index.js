@@ -45,6 +45,10 @@ app.get("/graph", (req, res) => {
   res.sendFile(path.join(__dirname, "../ember/index.html"));
 });
 
+app.get("/resume", (req, res) => {
+  res.sendFile(path.join(__dirname, "./assets/resume.pdf"))
+})
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });

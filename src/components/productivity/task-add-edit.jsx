@@ -10,8 +10,9 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "react-bootstrap";
-import { Form } from "react-router-dom";
-import { useState } from "react";
+import { Form, Link } from "react-router-dom";
+import { useState, useContext } from "react";
+import { ProductivityContext } from "../../store/context/productivity-context";
 
 const days = [
   { name: "Sunday", abbreviation: "Sun", id: "btn1" },
@@ -32,13 +33,15 @@ export default function TaskAddEdit({
   modalIsShowing,
 }) {
   const [recurrence, setRecurrence] = useState([]);
+  const {selectedTaskId} = useContext(ProductivityContext);
+  console.log(selectedTaskId)
 
   const closeModal = () => setModalIsShowing(false);
 
   return (
     <Modal show={modalIsShowing} onHide={closeModal} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Add Task</Modal.Title>
+        <Modal.Title>{editing ? "Edit Task" : "Add Task"}</Modal.Title>
       </Modal.Header>
       <Form method="post">
         <Modal.Body id="task-add-edit-modal">
@@ -96,9 +99,9 @@ export default function TaskAddEdit({
             {type === "time" ? (
               <>
                 <InputGroup.Text>Goal</InputGroup.Text>
-                <FormControl type="text" aria-label="hours" name="hours" />
+                <FormControl type="text" aria-label="hours" name="hours" className="text-end"/>
                 <InputGroup.Text>:</InputGroup.Text>
-                <FormControl type="text" aria-label="minutes" name="minutes" />
+                <FormControl type="text" aria-label="minutes" name="minutes" className="text-end"/>
               </>
             ) : type === "iterative" ? (
               <>

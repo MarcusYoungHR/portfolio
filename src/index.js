@@ -22,6 +22,10 @@ import Productivity, {
   action as productivityAction,
   loader as productivityLoader,
 } from "./routes/productivity";
+import Index from "./routes/Index"
+
+
+import Contact, {action as contactAction} from "./routes/Contact";
 
 import FightWatchContextProvider from "./store/context/fight-watch-context";
 import ProductivityContextProvider from "./store/context/productivity-context";
@@ -30,6 +34,16 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    children: [{
+      index: true,
+      element: <Index/>
+    },
+      {
+        path: "/contact",
+        element: <Contact/>,
+        action: contactAction
+      },
+    ],
   },
   {
     path: "/fight-watch",

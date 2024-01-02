@@ -5,30 +5,47 @@
   /* 50% 50% centers image in div */
   width: 300px;
   height: 300px;
-  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  clip-path: polygon(
+    30% 0%,
+    70% 0%,
+    100% 30%,
+    100% 70%,
+    70% 100%,
+    30% 100%,
+    0% 70%,
+    0% 30%
+  );
 }
-
 
 .portfolio-bg {
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  /* background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); */
+  /* background: linear-gradient(
+    to right,
+    #b9f2ff,
+    #82aeb3,
+    #b9ffc0,
+    #bbc9ff,
+    #82b386,
+    #82b386,
+    #bbc9ff,
+    #b9ffc0,
+    #82aeb3,
+    #b9f2ff
+  ); */
+  background: linear-gradient(-45deg, #b7d1d7, #b8f2ff, #82aeb3, #bbc9ff, #b9ffc0, #94b397, #bbc9ff, #82b386);
   background-size: 400% 400%;
-  animation: gradient 10s ease infinite;
-  height: 100vh;
-  overflow-y: scroll;
+  animation: gradient 15s ease infinite;
 }
-
 
 @keyframes gradient {
   0% {
-    background-position: 0% 50%;
+      background-position: 0% 0%;
   }
-
   50% {
-    background-position: 100% 50%;
+      background-position: 100% 100%;
   }
-
   100% {
-    background-position: 0% 50%;
+      background-position: 0% 0%;
   }
 }
 
@@ -43,7 +60,6 @@
 
 .nav-link:hover {
   cursor: pointer;
-  
 }
 
 .bg-navy {
@@ -67,22 +83,25 @@
   cursor: pointer;
 }
 
-
-::-webkit-scrollbar-track {
+/* ::-webkit-scrollbar-track {
   background-color: transparent
-}
+} */
 
 /* Define a CSS class for each route's scrollbar color */
-.scrollbar-portfolio::-webkit-scrollbar-thumb {
-  background-color: rgb(37, 37, 41); /* Change this to your preferred color */
-}
+/* .scrollbar-portfolio::-webkit-scrollbar-thumb {
+  background-color: rgb(37, 37, 41); 
+} */
+
+/* .scrollbar-portfolio::-webkit-scrollbar-track {
+  background-color: black;
+} */
 
 .scrollbar-fight-watch::-webkit-scrollbar-thumb {
   background-color: rgb(37, 37, 41); /* Change this to your preferred color */
 }
 
 .scrollbar-productivity::-webkit-scrollbar-thumb {
-  background-color: #1A5653; /* Change this to your preferred color */
+  background-color: #1a5653; /* Change this to your preferred color */
 }
 
 .min-vh-75 {
@@ -118,17 +137,25 @@
 }
 
 ::-webkit-scrollbar {
-  width: 12px
+  width: 12px;
 }
 
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .fade-in {

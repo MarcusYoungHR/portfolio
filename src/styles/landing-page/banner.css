@@ -1,0 +1,14 @@
+.banner-container {
+  background-image: url("https://fight-watch-photos.s3.us-west-2.amazonaws.com/space.jpeg");
+  background-size: cover;
+}
+
+.highlight {
+  color: rgb(0,246,255)
+}
+
+
+
+.obfuscate-image-03 {
+  background-color: rgba(0, 0, 0, 0.3)
+}

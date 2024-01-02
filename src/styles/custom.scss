@@ -3,18 +3,39 @@
 @import "node_modules/bootstrap/scss/variables";
 
 // Override the warning color
-$theme-colors: map-merge($theme-colors, (
-  "primary": #1A5653,
-  "success": #202A44,
-  "danger": #880808
-));
+$theme-colors: map-merge(
+  $theme-colors,
+  (
+    "primary": #1a5653,
+    "success": #202a44,
+    "danger": #880808,
+    "banner": #00f6ff,
+    "footer": #aeaeae,
+  )
+);
 
 $spacers: map-merge(
   $spacers,
   (
-    7: 5rem, // This represents 56px if your base font-size is 16px
+    7: 5rem,
+    // This represents 56px if your base font-size is 16px
+    "c4": 4rem,
   )
 );
+
+$font-sizes: map-merge(
+  $font-sizes,
+  (
+    "c5-5": 5.5rem,
+    "c5": 5rem,
+    "c4-5": 4.5rem,
+    "c4": 4rem,
+    "c3-5": 3.5rem,
+  )
+);
+
+
+$enable-negative-margins: true;
 
 // Now import the rest of Bootstrap
 @import "node_modules/bootstrap/scss/bootstrap";

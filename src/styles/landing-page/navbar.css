@@ -1,0 +1,18 @@
+.logo {
+  width: 100px;
+  height: auto;
+}
+
+.circle-popout-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto;
+}
+
+.circle-popout-logo {
+  grid-row: span 2;
+}
+
+.circle-popout-navbar {
+  grid-row: span 1
+}

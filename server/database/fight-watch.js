@@ -128,6 +128,16 @@ const visitors = {
   referer: { type: Sequelize.STRING },
 };
 
+const clients = {
+  id: idField,
+  firstName: {type: Sequelize.STRING},
+  lastName: {type: Sequelize.STRING},
+  phone: {type: Sequelize.STRING},
+  email: {type: Sequelize.STRING},
+  website: {type: Sequelize.STRING},
+  message: {type: Sequelize.STRING}
+}
+
 const Visitors = sequelize.define("Visitors", visitors);
 const Tasks = sequelize.define("Tasks", tasks);
 const Progress = sequelize.define("Progress", progress);

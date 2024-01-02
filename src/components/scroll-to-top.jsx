@@ -3,7 +3,6 @@ import Button from "react-bootstrap/Button";
 import classNames from "classnames";
 
 const ScrollToTop = ({variant, containerId}) => {
-  console.log("containerId: ", containerId)
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -43,7 +42,7 @@ const ScrollToTop = ({variant, containerId}) => {
         "fs-1": true,
       })}
     >
-      <i class="bi bi-chevron-up"></i>
+      <i className="bi bi-chevron-up"></i>
     </Button>
   ) : null;
 };

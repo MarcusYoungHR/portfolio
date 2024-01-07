@@ -2,7 +2,6 @@ import ContactField from "./ContactField";
 import {v4 as uuidv4} from "uuid"
 
 export default function ContactFields({ fields }) {
-  console.log(fields);
   return (
     <div className="row">
       <div className="col-12 col-md-6">

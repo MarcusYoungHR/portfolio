@@ -14,7 +14,7 @@ export default function UniqueValue({
   const { headerClass, textColClass, subHeaderClass } = classes;
   return (
     <Element name="Value">
-      <div className="container mb-7">
+      <div className="container mb-c4">
         <div className="row mb-5">
           <div
             className={
@@ -43,9 +43,7 @@ export default function UniqueValue({
             </div>
           </div>
           <div className="col-sm-12 col-md-6 d-flex justify-content-center align-items-center">
-            <div className="square-image">
-              <img className="rounded-5 p" src={image}></img>
-            </div>
+              <img className="rounded-5 h-100 w-100 object-fit-cover" src={image}></img>
           </div>
         </div>
         <KeyValuePoints keyPoints={keyPoints} keyPointClasses={keyPointClasses}/>

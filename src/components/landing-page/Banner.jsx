@@ -17,7 +17,7 @@ export default function Banner({
   return (
     <Element name="Banner">
       <div
-        className="row min-vh-100 banner-container m-0 text-light mb-5"
+        className="row min-vh-100 banner-container m-0 text-light mb-4"
         style={containerStyle || {}}
       >
         <div className="col obfuscate-image-03 d-flex flex-column justify-content-center align-items-center text-center">

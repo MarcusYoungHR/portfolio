@@ -3,7 +3,6 @@ import FAQItems from "./FAQItems";
 
 export default function FAQ({ items }) {
 
-  console.log(items)
   return (
     <Element name="FAQ">
       <div className="container">

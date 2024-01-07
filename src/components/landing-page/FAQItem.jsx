@@ -22,7 +22,7 @@ export default function FAQItem({ target, question, answer }) {
         {isExpanded ? (
           <i class="bi bi-x"></i>
         ) : (
-          <i class="bi bi-chevron-expand"></i>
+          <i class="bi bi-chevron-down"></i>
         )}
       </button>
       <div className="collapse mb-3" id={"faq-" + target}>

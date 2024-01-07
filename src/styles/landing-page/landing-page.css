@@ -56,6 +56,20 @@
   border-radius: 5rem;
 }
 
+.rounded-5rem-top-right {
+  border-top-right-radius: 5rem;
+}
+.rounded-5rem-bottom-right {
+  border-bottom-right-radius: 5rem;
+}
+
+.rounded-5rem-top-left {
+  border-top-left-radius: 5rem;
+}
+.rounded-5rem-bottom-left {
+  border-bottom-left-radius: 5rem;
+}
+
 .hover-fade {
   opacity: 1;
   transition: opacity 0.25s ease-in-out;
@@ -73,3 +87,21 @@
 .portfolio-tile:hover img {
   opacity: 0.3;
 }
+
+.left-minus-4-5rem {
+  left: -4.5rem
+}
+
+.width-10rem {
+  width: 10rem
+}
+
+.lottie {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 30px
+}
+
+.unique-value-image-container {
+  height: 100%
+}
+
